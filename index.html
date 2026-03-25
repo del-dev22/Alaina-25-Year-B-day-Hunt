@@ -137,9 +137,9 @@ function render() {
 }
 
 function answer(choice) {
-    if (choice === 'indian') scoreIndian++;
-    if (choice === 'thai') scoreThai++;
-    if (choice === 'adventurous') scoreAdventurous++;
+    if (choice === 'low') scorelow++;
+    if (choice === 'mid') scoremid++;
+    if (choice === 'high') scorehigh++;
 
     document.getElementById("app").innerHTML = "<h2>Nice choice 😏</h2>";
 
@@ -193,14 +193,25 @@ function answer(choice) {
         `;
     }
     
-    if (step === 5) {
+ if (step === 5) {
     app.innerHTML = `
-    <h2>One more…</h2>
+    <h2>What speaks to you</h2>
 
-    <p>What sounds better right now?</p>
-    <button onclick="answer('fancy')">Steak & wine 🍷</button>
-    <button onclick="answer('casual')">Burgers & fries 🍔</button>
-    <button onclick="answer('adventurous')">Something totally new 🍜</button>
+      <div style="display:flex; flex-direction:column; gap:15px;">
+
+        <img src="low2.jpg"
+             onclick="answer('low')"
+             style="width:100%; border-radius:15px; cursor:pointer;">
+
+        <img src="mid2.jpg"
+             onclick="answer('mid')"
+             style="width:100%; border-radius:15px; cursor:pointer;">
+
+        <img src="high2.jpg"
+             onclick="answer('high')"
+             style="width:100%; border-radius:15px; cursor:pointer;">
+
+    </div>
     `;
 }
 
@@ -226,14 +237,25 @@ function answer(choice) {
         <button onclick="checkAnswer('park')">Submit</button>
         `;
     }
-    if (step === 8) {
+ if (step === 8) {
     app.innerHTML = `
-    <h2>One more…</h2>
+    <h2>Pick a vib️e</h2>
 
-    <p>What sounds better right now?</p>
-    <button onclick="answer('fancy')">Steak & wine 🍷</button>
-    <button onclick="answer('casual')">Burgers & fries 🍔</button>
-    <button onclick="answer('adventurous')">Something totally new 🍜</button>
+      <div style="display:flex; flex-direction:column; gap:15px;">
+
+        <img src="low3.jpg"
+             onclick="answer('low')"
+             style="width:100%; border-radius:15px; cursor:pointer;">
+
+        <img src="mid3.jpg"
+             onclick="answer('mid')"
+             style="width:100%; border-radius:15px; cursor:pointer;">
+
+        <img src="high3.jpg"
+             onclick="answer('high')"
+             style="width:100%; border-radius:15px; cursor:pointer;">
+
+    </div>
     `;
 }
 
@@ -247,12 +269,12 @@ function answer(choice) {
     }
     
     function getFinalChoice() {
-    if (scoreFancy >= scoreCasual && scoreFancy >= scoreAdventurous) {
-        return "fancy";
-    } else if (scoreCasual >= scoreFancy && scoreCasual >= scoreAdventurous) {
-        return "casual";
+    if (scorelow >= scoremid && scorelow >= scorehigh) {
+        return "low";
+    } else if (scoremid >= scorelow && scoremid >= scorehigh) {
+        return "mid";
     } else {
-        return "adventurous";
+        return "high";
     }
 }
 
@@ -262,10 +284,10 @@ function answer(choice) {
     let place = "";
     let message = "";
 
-    if (choice === "fancy") {
+    if (choice === "low") {
         place = "Your Fancy Restaurant Name";
         message = "Tonight… we dress up ✨";
-    } else if (choice === "casual") {
+    } else if (choice === "mid") {
         place = "Your Casual Spot";
         message = "Keeping it relaxed and fun 😄";
     } else {
