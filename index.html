@@ -137,22 +137,22 @@ function render() {
 }
 
 function answer(choice) {
-    if (choice === 'low') scorelow++;
-    if (choice === 'mid') scoremid++;
-    if (choice === 'high') scorehigh++;
+    if (choice === 'indian') scoreIndian++;
+    if (choice === 'thai') scoreThai++;
+    if (choice === 'adventurous') scoreAdventurous++;
 
-    nextStep(step + 1);
+    document.getElementById("app").innerHTML = "<h2>Nice choice 😏</h2>";
+
+    setTimeout(() => {
+        nextStep(step + 1);
+    }, 1000);
 }
    
   if (step === 2) {
     app.innerHTML = `
     <h2>Pick a vib️e</h2>
 
-      <div style="
-        display:grid;
-        grid-template-columns: 1fr;
-        gap:15px;
-    ">
+      <div style="display:flex; flex-direction:column; gap:15px;">
 
         <img src="low1.jpg"
              onclick="answer('low')"
