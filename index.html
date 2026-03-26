@@ -56,263 +56,318 @@
 let step = 0;
 let hintLevel = 0;
 let attempts = 0;
-let scorelow = 0;
-let scoremid = 0;
-let scorehigh = 0;
+
+let scoreIndian = 0;
+let scoreThai = 0;
+let scoreAdventurous = 0;
 
 function nextStep(s) {
     step = s;
     render();
 }
 
+function resetPuzzleState() {
+    hintLevel = 0;
+    attempts = 0;
+}
+
 function checkAnswer(correct) {
-    let input = document.getElementById("answer").value.toLowerCase();
+    const input = document.getElementById("answer").value.trim().toLowerCase();
     attempts++;
 
-    if (input.includes(correct)) {
+    if (input === correct.toLowerCase()) {
         nextStep(step + 1);
     } else {
         alert("Not quite 😊");
-
-        if (attempts >= 2) {
-            document.getElementById("hintButton").style.display = "inline-block";
+        const hintButton = document.getElementById("hintButton");
+        if (hintButton && attempts >= 2) {
+            hintButton.style.display = "inline-block";
         }
     }
 }
- function showHint() {
+
+function showHint(hints) {
     hintLevel++;
+    const hintBox = document.getElementById("hintBox");
+    if (!hintBox) return;
 
-    let hintText = "";
+    const index = Math.min(hintLevel - 1, hints.length - 1);
+    hintBox.innerText = hints[index];
+}
 
-    if (hintLevel === 1) {
-        hintText = "Try looking at each word a little more carefully 👀";
-    } else if (hintLevel === 2) {
-        hintText = "Maybe a specific letter in each word matters...";
-    } else if (hintLevel === 3) {
-        hintText = "Focus on the 3rd letter of each word 😉";
-    } else {
-        hintText = "You’ve got this 💛";
-    }
+function answer(choice) {
+    if (choice === "indian") scoreIndian++;
+    if (choice === "thai") scoreThai++;
+    if (choice === "adventurous") scoreAdventurous++;
 
-    document.getElementById("hintBox").innerText = hintText;
+    document.getElementById("app").innerHTML = "<h2>Nice choice 😏</h2>";
+
+    setTimeout(() => {
+        nextStep(step + 1);
+    }, 800);
 }
 
 function openMap(lat, lng) {
     const googleUrl = `https://maps.google.com/?q=${lat},${lng}`;
     const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}`;
 
-    // Try Google Maps
     window.location.href = googleUrl;
 
-    // Fallback after a short delay (for iOS issues)
     setTimeout(() => {
         window.location.href = appleUrl;
-    }, 1500);
+    }, 1200);
+}
+
+function getFinalChoice() {
+    if (scoreIndian >= scoreThai && scoreIndian >= scoreAdventurous) {
+        return "indian";
+    } else if (scoreThai >= scoreIndian && scoreThai >= scoreAdventurous) {
+        return "thai";
+    } else {
+        return "adventurous";
+    }
 }
 
 function render() {
-    let app = document.getElementById("app");
+    const app = document.getElementById("app");
+
+    if (step === 0) {
+        app.innerHTML = `
+            <h1>🍖 Happy Birthday HAM 🍖</h1>
+            <p>I will be your game Master</p>
+            <img src="intro.jpg" style="max-width:100%; height:auto; border-radius:15px; margin:15px 0;">
+            <button onclick="nextStep(1)">Start</button>
+        `;
+    }
 
     if (step === 1) {
-    hintLevel = 0;
-    attempts = 0;
+        resetPuzzleState();
+        app.innerHTML = `
+            <h2>Clue 1 ☕</h2>
+            <p>
+                Lets start off strong for your lovely day of birth,<br>
+                decipher this code to unlock the first destination:<br><br>
+                20-8-5-13-21-19-5
+            </p>
+            <input id="answer" placeholder="Enter your answer">
+            <br>
+            <button onclick="checkAnswer('the muse')">Submit</button>
+            <br><br>
+            <button id="hintButton" onclick="showHint([
+                'Try converting the numbers into letters 👀',
+                '1 = A, 2 = B, 3 = C...',
+                'It is a coffee place we talked about ☕'
+            ])" style="display:none;">Hint 💡</button>
+            <p id="hintBox" style="margin-top:10px; color:#555;"></p>
+        `;
+    }
 
-    app.innerHTML = `
-    <h2>Clue 1 ☕</h2>
+    if (step === 2) {
+        app.innerHTML = `
+            <h2>Quick question 1</h2>
+            <p>What sounds best this evening?</p>
+            <div style="display:flex; flex-direction:column; gap:15px;">
+                <img src="survey1_indian.jpg" onclick="answer('indian')" style="width:100%; border-radius:15px; cursor:pointer;">
+                <img src="survey1_thai.jpg" onclick="answer('thai')" style="width:100%; border-radius:15px; cursor:pointer;">
+                <img src="survey1_adventure.jpg" onclick="answer('adventurous')" style="width:100%; border-radius:15px; cursor:pointer;">
+            </div>
+        `;
+    }
 
-    <p>Lets start off strong for your lovely day of birth,<br> decipher this code to unlock the first destination:<br><br> 20-8-5-13-21-19-5</p>
-
-    <input id="answer" placeholder="Enter your answer">
-    <br>
-    <button onclick="checkAnswer('the muse')">Submit</button>
-
-    <br><br>
-
-    <button id="hintButton" onclick="showHint()" style="display:none;">
-        Hint 💡
-    </button>
-
-    <p id="hintBox" style="margin-top:10px; color:#555;"></p>
-    `;
-}
-
-function answer(choice) {
-    if (choice === 'low') scorelow++;
-    if (choice === 'mid') scoremid++;
-    if (choice === 'high') scorehigh++;
-
-    document.getElementById("app").innerHTML = "<h2>Nice choice 😏</h2>";
-
-    setTimeout(() => {
-        nextStep(step + 1);
-    }, 1000);
-}
-   
-  if (step === 2) {
-    app.innerHTML = `
-    <h2>Pick a vibe</h2>
-
-    <div style="display:flex; flex-direction:column; gap:15px;">
-
-        <img src="low1.jpg"
-             onclick="answer('low')"
-             style="width:100%; border-radius:15px; cursor:pointer;">
-
-        <img src="mid1.jpg"
-             onclick="answer('mid')"
-             style="width:100%; border-radius:15px; cursor:pointer;">
-
-        <img src="high1.jpg"
-             onclick="answer('high')"
-             style="width:100%; border-radius:15px; cursor:pointer;">
-
-    </div>
-    `;
-}
     if (step === 3) {
-    app.innerHTML = `
-    <h2>📍 Destination 1 has been unlocked</h2>
-    <p>Go here to continue:</p>
-    <button onclick="openMap(48.001406507031, -122.22194166845058)">Open in Maps</button>
-    <br><br>
-    <button onclick="nextStep(3)">I'm Here</button>
-    `;
-}
+        app.innerHTML = `
+            <h2>📍 Destination 1 unlocked</h2>
+            <p>Go here to continue:</p>
+            <button onclick="openMap(48.001406507031, -122.22194166845058)">Open in Maps</button>
+            <br><br>
+            <button onclick="nextStep(4)">I'm Here</button>
+        `;
+    }
 
     if (step === 4) {
         app.innerHTML = `
-        <h2>Clue 2</h2>
-        <p>Not quite the ocean, but it still tells a tale,<br>
-        Where waves meet the shore and sunsets don’t fail.<br>
-        We walked side by side with nothing to prove—<br>
-        Find the place where the water and skyline move.</p>
-
-        <input id="answer">
-        <br>
-        <button onclick="checkAnswer('water')">Submit</button>
+            <h2>Arrival Check ✅</h2>
+            <p>Find the physical code at this location to unlock the next clue.</p>
+            <input id="answer" placeholder="Enter location code">
+            <br>
+            <button onclick="checkAnswer('MUSE25')">Submit</button>
         `;
     }
-    
- if (step === 5) {
-    app.innerHTML = `
-    <h2>What speaks to you</h2>
 
-      <div style="display:flex; flex-direction:column; gap:15px;">
-
-        <img src="low2.jpg"
-             onclick="answer('low')"
-             style="width:100%; border-radius:15px; cursor:pointer;">
-
-        <img src="mid2.jpg"
-             onclick="answer('mid')"
-             style="width:100%; border-radius:15px; cursor:pointer;">
-
-        <img src="high2.jpg"
-             onclick="answer('high')"
-             style="width:100%; border-radius:15px; cursor:pointer;">
-
-    </div>
-    `;
-}
+    if (step === 5) {
+        resetPuzzleState();
+        app.innerHTML = `
+            <h2>Clue 2</h2>
+            <p>
+                Not quite the ocean, but it still tells a tale,<br>
+                Where waves meet the shore and sunsets don’t fail.<br>
+                We walked side by side with nothing to prove,<br>
+                Find the place where the water and skyline move.
+            </p>
+            <input id="answer" placeholder="Enter your answer">
+            <br>
+            <button onclick="checkAnswer('marina park')">Submit</button>
+            <br><br>
+            <button id="hintButton" onclick="showHint([
+                'Think waterfront 👀',
+                'Think Kirkland shoreline',
+                'It is a park by the marina'
+            ])" style="display:none;">Hint 💡</button>
+            <p id="hintBox" style="margin-top:10px; color:#555;"></p>
+        `;
+    }
 
     if (step === 6) {
         app.innerHTML = `
-        <h2>📍 Location 2</h2>
-        <button onclick="openMap(47.6765, -122.2090)">Open in Maps</button>
-        <br><br>
-        <button onclick="nextStep(5)">I'm Here</button>
+            <h2>Quick question 2</h2>
+            <p>Pick the mood that fits tonight best.</p>
+            <div style="display:flex; flex-direction:column; gap:15px;">
+                <img src="survey2_indian.jpg" onclick="answer('indian')" style="width:100%; border-radius:15px; cursor:pointer;">
+                <img src="survey2_thai.jpg" onclick="answer('thai')" style="width:100%; border-radius:15px; cursor:pointer;">
+                <img src="survey2_adventure.jpg" onclick="answer('adventurous')" style="width:100%; border-radius:15px; cursor:pointer;">
+            </div>
         `;
     }
 
     if (step === 7) {
         app.innerHTML = `
-        <h2>Clue 3</h2>
-        <p>Away from the noise, where the world slows down,<br>
-        A hidden escape just outside of town.<br>
-        Where silence says more than words ever could—<br>
-        Find the place wrapped in calm and wood.</p>
-
-        <input id="answer">
-        <br>
-        <button onclick="checkAnswer('park')">Submit</button>
+            <h2>📍 Destination 2 unlocked</h2>
+            <button onclick="openMap(47.6765, -122.2090)">Open in Maps</button>
+            <br><br>
+            <button onclick="nextStep(8)">I'm Here</button>
         `;
     }
- if (step === 8) {
-    app.innerHTML = `
-    <h2>Pick a vib️e</h2>
 
-      <div style="display:flex; flex-direction:column; gap:15px;">
-
-        <img src="low3.jpg"
-             onclick="answer('low')"
-             style="width:100%; border-radius:15px; cursor:pointer;">
-
-        <img src="mid3.jpg"
-             onclick="answer('mid')"
-             style="width:100%; border-radius:15px; cursor:pointer;">
-
-        <img src="high3.jpg"
-             onclick="answer('high')"
-             style="width:100%; border-radius:15px; cursor:pointer;">
-
-    </div>
-    `;
-}
+    if (step === 8) {
+        app.innerHTML = `
+            <h2>Arrival Check ✅</h2>
+            <p>Find the physical code at this location.</p>
+            <input id="answer" placeholder="Enter location code">
+            <br>
+            <button onclick="checkAnswer('WATER25')">Submit</button>
+        `;
+    }
 
     if (step === 9) {
+        resetPuzzleState();
         app.innerHTML = `
-        <h2>📍 Location 3</h2>
-        <button onclick="openMap(47.7081, -122.2275)">Open in Maps</button>
-        <br><br>
-        <button onclick="nextStep(7)">I'm Here</button>
+            <h2>Clue 3</h2>
+            <p>
+                Away from the noise, where the world slows down,<br>
+                A hidden escape just outside of town.<br>
+                Where silence says more than words ever could,<br>
+                Find the place wrapped in calm and wood.
+            </p>
+            <input id="answer" placeholder="Enter your answer">
+            <br>
+            <button onclick="checkAnswer('juanita bay park')">Submit</button>
+            <br><br>
+            <button id="hintButton" onclick="showHint([
+                'Think nature 👀',
+                'Think a quiet park',
+                'It is Juanita Bay Park'
+            ])" style="display:none;">Hint 💡</button>
+            <p id="hintBox" style="margin-top:10px; color:#555;"></p>
         `;
     }
-    
-    function getFinalChoice() {
-    if (scorelow >= scoremid && scorelow >= scorehigh) {
-        return "low";
-    } else if (scoremid >= scorelow && scoremid >= scorehigh) {
-        return "mid";
-    } else {
-        return "high";
-    }
-}
 
     if (step === 10) {
-    const choice = getFinalChoice();
-
-    let place = "";
-    let message = "";
-
-    if (choice === "low") {
-        place = "Your Fancy Restaurant Name";
-        message = "Tonight… we dress up ✨";
-    } else if (choice === "mid") {
-        place = "Your Casual Spot";
-        message = "Keeping it relaxed and fun 😄";
-    } else {
-        place = "Your Adventurous Spot";
-        message = "Let’s try something new 🌍";
+        app.innerHTML = `
+            <h2>Quick question 3</h2>
+            <p>Choose what sounds most exciting right now.</p>
+            <div style="display:flex; flex-direction:column; gap:15px;">
+                <img src="survey3_indian.jpg" onclick="answer('indian')" style="width:100%; border-radius:15px; cursor:pointer;">
+                <img src="survey3_thai.jpg" onclick="answer('thai')" style="width:100%; border-radius:15px; cursor:pointer;">
+                <img src="survey3_adventure.jpg" onclick="answer('adventurous')" style="width:100%; border-radius:15px; cursor:pointer;">
+            </div>
+        `;
     }
-
-    app.innerHTML = `
-    <h2>Final Destination ❤️</h2>
-    <p>${message}</p>
-
-    <button onclick="openMapPlace('${place}')">
-        Take me there
-    </button>
-    `;
-}
 
     if (step === 11) {
         app.innerHTML = `
-        <h1>❤️ You Found Me ❤️</h1>
-        <p>This was never about the locations… it was always about us.</p>
-        <p>I love you.</p>
+            <h2>📍 Destination 3 unlocked</h2>
+            <button onclick="openMap(47.7081, -122.2275)">Open in Maps</button>
+            <br><br>
+            <button onclick="nextStep(12)">I'm Here</button>
+        `;
+    }
+
+    if (step === 12) {
+        app.innerHTML = `
+            <h2>Arrival Check ✅</h2>
+            <p>Find the physical code at this location.</p>
+            <input id="answer" placeholder="Enter location code">
+            <br>
+            <button onclick="checkAnswer('PARK25')">Submit</button>
+        `;
+    }
+
+    if (step === 13) {
+        resetPuzzleState();
+        app.innerHTML = `
+            <h2>Final clue ❤️</h2>
+            <p>
+                The day is not over, there is one more surprise,<br>
+                A final stop chosen by your heart in disguise.<br>
+                Every little answer has helped clear the way,<br>
+                Now let us reveal where we end the day.
+            </p>
+            <button onclick="nextStep(14)">Reveal the final question</button>
+        `;
+    }
+
+    if (step === 14) {
+        app.innerHTML = `
+            <h2>Quick question 4</h2>
+            <p>Last one. Pick your perfect ending.</p>
+            <div style="display:flex; flex-direction:column; gap:15px;">
+                <img src="survey4_indian.jpg" onclick="answer('indian')" style="width:100%; border-radius:15px; cursor:pointer;">
+                <img src="survey4_thai.jpg" onclick="answer('thai')" style="width:100%; border-radius:15px; cursor:pointer;">
+                <img src="survey4_adventure.jpg" onclick="answer('adventurous')" style="width:100%; border-radius:15px; cursor:pointer;">
+            </div>
+        `;
+    }
+
+    if (step === 15) {
+        const choice = getFinalChoice();
+        let place = "";
+        let message = "";
+        let coords = { lat: 0, lng: 0 };
+
+        if (choice === "indian") {
+            place = "Your Indian Restaurant";
+            message = "Tonight feels bold, warm, and full of flavor ❤️";
+            coords = { lat: 47.0000, lng: -122.0000 };
+        } else if (choice === "thai") {
+            place = "Your Thai Restaurant";
+            message = "Tonight feels vibrant, cozy, and a little playful ✨";
+            coords = { lat: 47.0000, lng: -122.0000 };
+        } else {
+            place = "Your Adventurous Restaurant";
+            message = "Tonight calls for something new and unforgettable 🌍";
+            coords = { lat: 47.0000, lng: -122.0000 };
+        }
+
+        app.innerHTML = `
+            <h2>Final Destination ❤️</h2>
+            <p>${message}</p>
+            <p><strong>${place}</strong></p>
+            <button onclick="openMap(${coords.lat}, ${coords.lng})">Take me there</button>
+            <br><br>
+            <button onclick="nextStep(16)">Continue</button>
+        `;
+    }
+
+    if (step === 16) {
+        app.innerHTML = `
+            <h1>❤️ You Found Me ❤️</h1>
+            <p>This was never about the locations. It was always about us.</p>
+            <p>I love you.</p>
         `;
     }
 }
+
+render();
 </script>
 
 </body>
