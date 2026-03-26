@@ -277,7 +277,7 @@ function render() {
 
         <input id="answer" placeholder="Enter location code">
         <br>
-        <button onclick="checkAnswer('MUSE25')">Submit</button>
+        <button onclick="checkAnswer('MUSE')">Submit</button>
     `;
 }
 
@@ -291,7 +291,8 @@ function render() {
    This puzzel will test your seattle history knowledge.<br>
    My life span ran from 1906 to 1956<br>
    Back in my day I was what some would call gassy<br>
-   I was the life of the party and brought seattle its energy
+   I was the life of the party and brought seattle its energy<br>
+   What am I?
     </p>
 
     <input id="answer" placeholder="Enter your answer">
@@ -328,7 +329,7 @@ function render() {
         app.innerHTML = `
             <h2>📍 Destination 2 unlocked</h2>
             <p>Go here to continue:</p>
-            <button onclick="openMap(47.6765, -122.2090)">Open in Maps</button>
+            <button onclick="openMap(47.64578871366846, -122.3343695349487)">Open in Maps</button>
             <br><br>
             <button onclick="nextStep(8)">I'm Here</button>
         `;
@@ -342,36 +343,41 @@ function render() {
 
             <input id="answer" placeholder="Enter location code">
             <br>
-            <button onclick="checkAnswer('WATER25')">Submit</button>
+            <button onclick="checkAnswer('Gas')">Submit</button>
         `;
     }
 
     if (step === 9) {
-        resetPuzzleState();
-        app.innerHTML = `
-            <h2>Clue 3 🌲</h2>
-            <p>
-                Away from the noise, where the world slows down,<br>
-                A hidden escape just outside of town.<br>
-                Where silence says more than words ever could,<br>
-                Find the place wrapped in calm and wood.
-            </p>
+    resetPuzzleState();
 
-            <input id="answer" placeholder="Enter your answer">
-            <br>
-            <button onclick="checkAnswer('juanita bay park')">Submit</button>
+    app.innerHTML = `
+    <h2>Clue 3</h2>
 
-            <br><br>
-            <button id="hintButton" onclick='showHint([
-                "Think nature 👀",
-                "Think a peaceful park",
-                "It is Juanita Bay Park"
-            ])' style="display:none;">Hint 💡</button>
+    <p>
+    Some stories don’t reveal themselves at first…<br>
+    Try shifting your perspective.
+    </p>
 
-            <p id="hintBox" class="subtle"></p>
-        `;
-    }
+    <p style="font-size:22px; letter-spacing:3px;">
+    HOOLRWW
+    </p>
 
+    <input id="answer" placeholder="Enter your answer">
+    <br>
+    <button onclick="checkAnswer('elliott')">Submit</button>
+
+    <br><br>
+
+    <button id="hintButton" onclick='showHint([
+        "Each letter has been shifted 👀",
+        "Try moving letters backward",
+        "Shift by 3",
+        "It spells the name of the place"
+    ])' style="display:none;">Hint 💡</button>
+
+    <p id="hintBox" class="subtle"></p>
+    `;
+}
     if (step === 10) {
         app.innerHTML = `
             <h2>Quick question 3</h2>
@@ -389,7 +395,7 @@ function render() {
         app.innerHTML = `
             <h2>📍 Destination 3 unlocked</h2>
             <p>Go here to continue:</p>
-            <button onclick="openMap(47.7081, -122.2275)">Open in Maps</button>
+            <button onclick="openMap(47.614720439007364, -122.31960224729806)">Open in Maps</button>
             <br><br>
             <button onclick="nextStep(12)">I'm Here</button>
         `;
@@ -403,18 +409,18 @@ function render() {
 
             <input id="answer" placeholder="Enter location code">
             <br>
-            <button onclick="checkAnswer('PARK25')">Submit</button>
+            <button onclick="checkAnswer('Smut')">Submit</button>
         `;
     }
 
     if (step === 13) {
         resetPuzzleState();
         app.innerHTML = `
-            <h2>Clue 4 ❤️</h2>
+            <h2>Clue 4</h2>
             <p>
-                The day is not over, there is one more surprise.<br>
-                A final stop chosen by your heart in disguise.<br>
-                Every little answer has helped clear the way.<br>
+                Each choice you made led to your final destination.<br>
+                A final stop chosen by the birthday girl.<br>
+                The vibe of the night has been set in stone.<br>
                 Now let us reveal where we end the day.
             </p>
 
@@ -455,16 +461,16 @@ function render() {
 
         if (choice === "low") {
             place = "Your Low Adventure Dinner Spot";
-            message = "Tonight calls for something cozy, comforting, and easy ❤️";
-            coords = { lat: 47.0000, lng: -122.0000 };
+            message = "Tonight calls for something cozy, comforting, and easy";
+            coords = { lat: 47.99909021716266, lng:-122.21543217638319 };
         } else if (choice === "mid") {
             place = "Your Mid Adventure Dinner Spot";
-            message = "A little adventure, a little comfort, and the perfect balance ✨";
-            coords = { lat: 47.0000, lng: -122.0000 };
+            message = "A little adventure, a little comfort, and the perfect balance";
+            coords = { lat: 47.62142628458087, lng:-122.33340200385238 };
         } else {
             place = "Your High Adventure Dinner Spot";
-            message = "You chose adventure, so let’s make tonight unforgettable 🌍";
-            coords = { lat: 47.0000, lng: -122.0000 };
+            message = "You chose adventure, so let’s make tonight unforgettable";
+            coords = { lat: 47.62431328377069, lng:-122.29505178642042};
         }
 
         app.innerHTML = `
@@ -481,9 +487,8 @@ function render() {
 
     if (step === 17) {
         app.innerHTML = `
-            <h1>❤️ You Found Me ❤️</h1>
-            <p>This was never just about the locations.</p>
-            <p>It was always about us.</p>
+            <h1>❤️Congradulations, You did it❤️</h1>
+            <p>I hope you had an awsome 25th b-day hunt.</p>
             <p>I love you.</p>
         `;
     }
