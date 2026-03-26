@@ -5,86 +5,84 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Birthday Adventure</title>
 <style>
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: linear-gradient(135deg, #76a5af, #20505b);
-        color: #333;
-        text-align: center;
-        padding: 20px;
-        margin: 0;
-    }
-
-    .card {
-        background: white;
-        max-width: 700px;
-        margin: 20px auto;
-        padding: 24px;
-        border-radius: 22px;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-    }
-
-    h1, h2 {
-        margin-top: 0;
-    }
-
-    p {
-        line-height: 1.5;
-    }
-
-    button {
-        padding: 12px 20px;
-        border: none;
-        border-radius: 12px;
-        background: #ff6b81;
-        color: white;
-        font-size: 16px;
-        margin-top: 12px;
-        cursor: pointer;
-    }
-
-    input {
-        padding: 12px;
-        border-radius: 12px;
-        border: 1px solid #ccc;
-        width: 85%;
-        max-width: 320px;
-        margin-top: 10px;
-        font-size: 16px;
-    }
-
-    .photo-cover {
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-        border-radius: 18px;
-        margin: 16px 0;
-        box-shadow: 0 8px 18px rgba(0,0,0,0.12);
-    }
-
-    .choice-stack {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        padding: 10px 0;
-    }
-
-    .choice-stack img {
-        width: 100%;
-        height: auto;
-        border-radius: 16px;
-        cursor: pointer;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.10);
-        transition: transform 0.15s ease;
-    }
-
-    .choice-stack img:active {
-        transform: scale(0.98);
-    }
-
-    .subtle {
-        font-size: 14px;
-        color: #666;
-    }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #76a5af, #20505b);
+    color: #333;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+}
+.card {
+    background: white;
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 24px;
+    border-radius: 22px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+}
+h1, h2 {
+    margin-top: 0;
+}
+p {
+    line-height: 1.5;
+}
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #ff6b81;
+    color: white;
+    font-size: 16px;
+    margin-top: 12px;
+    cursor: pointer;
+}
+input {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    width: 85%;
+    max-width: 320px;
+    margin-top: 10px;
+    font-size: 16px;
+}
+.photo-cover,
+.hint-photo {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 18px;
+    margin: 16px 0;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+.choice-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px 0;
+}
+.choice-stack img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.10);
+    transition: transform 0.15s ease;
+}
+.choice-stack img:active {
+    transform: scale(0.98);
+}
+.subtle {
+    font-size: 14px;
+    color: #666;
+}
+.back-btn {
+    background: #d9d9d9;
+    color: #333;
+    margin-bottom: 16px;
+    font-size: 14px;
+    padding: 10px 14px;
+}
 </style>
 </head>
 <body>
@@ -101,6 +99,8 @@ let scoreMid = 0;
 let scoreHigh = 0;
 
 let isUnlocked = false;
+let answeredSteps = {};
+
 const gameMasterCode = "hambday";
 
 function nextStep(s) {
@@ -133,7 +133,6 @@ function checkAnswer(correct) {
         nextStep(step + 1);
     } else {
         alert("Wrongo");
-
         const hintButton = document.getElementById("hintButton");
         if (hintButton && attempts >= 2) {
             hintButton.style.display = "inline-block";
@@ -143,7 +142,6 @@ function checkAnswer(correct) {
 
 function showHint(hints) {
     hintLevel++;
-
     const hintBox = document.getElementById("hintBox");
     if (!hintBox) return;
 
@@ -151,16 +149,33 @@ function showHint(hints) {
     hintBox.innerText = hints[hintIndex];
 }
 
-function answer(choice) {
-    if (choice === "low") scoreLow++;
-    if (choice === "mid") scoreMid++;
-    if (choice === "high") scoreHigh++;
+function goBack() {
+    if (step > 0) {
+        step--;
+        render();
+    }
+}
 
-    document.getElementById("app").innerHTML = "<h2>This choice has consequences,<br>but I get what you are putting down</h2>";
+function getBackButton() {
+    if (step === 0) return "";
+    return `<button class="back-btn" onclick="goBack()">← Back</button>`;
+}
+
+function answer(choice) {
+    if (!answeredSteps[step]) {
+        if (choice === "low") scoreLow++;
+        if (choice === "mid") scoreMid++;
+        if (choice === "high") scoreHigh++;
+        answeredSteps[step] = choice;
+    }
+
+    document.getElementById("app").innerHTML = `
+        <h2>This choice has consequences,<br>but I get what you are putting down</h2>
+    `;
 
     setTimeout(() => {
         nextStep(step + 1);
-    }, 800);
+    }, 1800);
 }
 
 function openMap(lat, lng) {
@@ -192,11 +207,9 @@ function render() {
             <h1>🔒 Birthday Adventure</h1>
             <p>Your experience is waiting for the game master to begin.</p>
             <p>Enter the game master code to unlock it.</p>
-
             <input id="masterCode" type="password" placeholder="Game master code">
             <br>
             <button onclick="unlockGame()">Unlock</button>
-
             <p class="subtle">All bubble-blowing babies will be beaten senseless by every able-bodied patron in the bar</p>
         `;
         return;
@@ -207,11 +220,8 @@ function render() {
             <h1>🍖Happy Birthday🍖</h1>
             <p>Welcome to your B-day Hunt.</p>
             <p>I will be your game master for today.</p>
-
             <img src="intro.jpg" alt="Cover Photo" class="photo-cover">
-
             <p class="subtle">Your mission: solve the clues, answer the mystery questions, and follow the trail.</p>
-
             <button onclick="nextStep(1)">Start</button>
         `;
     }
@@ -219,32 +229,31 @@ function render() {
     if (step === 1) {
         resetPuzzleState();
         app.innerHTML = `
+            ${getBackButton()}
             <h2>Clue 1</h2>
             <p>
                 Lets start off strong for your lovely day of birth.<br>
                 Decipher this code to unlock the first destination:<br><br>
-                 20-8-5 13-21-19-5
+                20-8-5 13-21-19-5
             </p>
-
             <input id="answer" placeholder="Enter your answer">
             <br>
             <button onclick="checkAnswer('the muse')">Submit</button>
-
             <br><br>
             <button id="hintButton" onclick='showHint([
                 "Try converting numbers into letters 👀",
                 "1 = A, 2 = B, 3 = C...",
+                "You are looking for your coffee start"
             ])' style="display:none;">Hint 💡</button>
-
             <p id="hintBox" class="subtle"></p>
         `;
     }
 
     if (step === 2) {
         app.innerHTML = `
+            ${getBackButton()}
             <h2>Quick question 1</h2>
             <p>What kind of ending sounds best right now?</p>
-
             <div class="choice-stack">
                 <img src="low1.jpg" alt="Low Adventure" onclick="answer('low')">
                 <img src="mid1.jpg" alt="Mid Adventure" onclick="answer('mid')">
@@ -255,6 +264,7 @@ function render() {
 
     if (step === 3) {
         app.innerHTML = `
+            ${getBackButton()}
             <h2>📍 Destination 1 unlocked</h2>
             <p>Go here to continue:</p>
             <button onclick="openMap(48.00156901609624, -122.22195784235124)">Open in Maps</button>
@@ -266,57 +276,48 @@ function render() {
     if (step === 4) {
         resetPuzzleState();
         app.innerHTML = `
+            ${getBackButton()}
             <h2>Arrival Check ✅</h2>
-        <p>Find the physical code at this location to unlock the next clue.</p>
-
-        <img src="arrival1.jpg" 
-             alt="Hint location"
-             style="width:100%; border-radius:15px; margin:15px 0;">
-
-        <p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
-
-        <input id="answer" placeholder="Enter location code">
-        <br>
-        <button onclick="checkAnswer('MUSE')">Submit</button>
-    `;
-}
+            <p>Find the physical code at this location to unlock the next clue.</p>
+            <img src="arrival1.jpg" alt="Hint location" class="hint-photo">
+            <p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
+            <input id="answer" placeholder="Enter location code">
+            <br>
+            <button onclick="checkAnswer('MUSE')">Submit</button>
+        `;
+    }
 
     if (step === 5) {
-    resetPuzzleState();
-
-    app.innerHTML = `
-    <h2>Clue 2</h2>
-
-    <p>
-   This puzzel will test your seattle history knowledge.<br>
-   My life span ran from 1906 to 1956<br>
-   Back in my day I was what some would call gassy<br>
-   I was the life of the party and brought seattle its energy<br>
-   What am I?
-    </p>
-
-    <input id="answer" placeholder="Enter your answer">
-    <br>
-    <button onclick="checkAnswer('gas works park')">Submit</button>
-
-    <br><br>
-
-    <button id="hintButton" onclick='showHint([
-        "Think industrial",
-        "Old structures that used to power something",
-        "It has an amazing view of Seattle skyline",
-        "Gas Works Park"
-    ])' style="display:none;">Hint 💡</button>
-
-    <p id="hintBox" class="subtle"></p>
-    `;
-}
+        resetPuzzleState();
+        app.innerHTML = `
+            ${getBackButton()}
+            <h2>Clue 2</h2>
+            <p>
+                This puzzel will test your seattle history knowledge.<br>
+                My life span ran from 1906 to 1956<br>
+                Back in my day I was what some would call gassy<br>
+                I was the life of the party and brought seattle its energy<br>
+                What am I?
+            </p>
+            <input id="answer" placeholder="Enter your answer">
+            <br>
+            <button onclick="checkAnswer('gas works park')">Submit</button>
+            <br><br>
+            <button id="hintButton" onclick='showHint([
+                "Think industrial",
+                "Old structures that used to power something",
+                "It has an amazing view of Seattle skyline",
+                "Gas Works Park"
+            ])' style="display:none;">Hint 💡</button>
+            <p id="hintBox" class="subtle"></p>
+        `;
+    }
 
     if (step === 6) {
         app.innerHTML = `
+            ${getBackButton()}
             <h2>Quick question 2</h2>
             <p>Whats more your speed? (Choose wisely).</p>
-
             <div class="choice-stack">
                 <img src="low2.jpg" alt="Low Adventure" onclick="answer('low')">
                 <img src="mid2.jpg" alt="Mid Adventure" onclick="answer('mid')">
@@ -327,6 +328,7 @@ function render() {
 
     if (step === 7) {
         app.innerHTML = `
+            ${getBackButton()}
             <h2>📍 Destination 2 unlocked</h2>
             <p>Go here to continue:</p>
             <button onclick="openMap(47.64578871366846, -122.3343695349487)">Open in Maps</button>
@@ -338,9 +340,11 @@ function render() {
     if (step === 8) {
         resetPuzzleState();
         app.innerHTML = `
+            ${getBackButton()}
             <h2>Arrival Check ✅</h2>
             <p>Find the physical code at this location to unlock the next clue.</p>
-
+            <img src="arrival2.jpg" alt="Hint location" class="hint-photo">
+            <p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
             <input id="answer" placeholder="Enter location code">
             <br>
             <button onclick="checkAnswer('Gas')">Submit</button>
@@ -348,41 +352,36 @@ function render() {
     }
 
     if (step === 9) {
-    resetPuzzleState();
+        resetPuzzleState();
+        app.innerHTML = `
+            ${getBackButton()}
+            <h2>Clue 3</h2>
+            <p>
+                Some stories don’t reveal themselves at first…<br>
+                Try shifting your perspective.
+            </p>
+            <p style="font-size:22px; letter-spacing:3px;">
+                HOOLRWW
+            </p>
+            <input id="answer" placeholder="Enter your answer">
+            <br>
+            <button onclick="checkAnswer('elliott')">Submit</button>
+            <br><br>
+            <button id="hintButton" onclick='showHint([
+                "Each letter has been shifted 👀",
+                "Try moving letters backward",
+                "Shift by 3",
+                "It spells the name of the place"
+            ])' style="display:none;">Hint 💡</button>
+            <p id="hintBox" class="subtle"></p>
+        `;
+    }
 
-    app.innerHTML = `
-    <h2>Clue 3</h2>
-
-    <p>
-    Some stories don’t reveal themselves at first…<br>
-    Try shifting your perspective.
-    </p>
-
-    <p style="font-size:22px; letter-spacing:3px;">
-    HOOLRWW
-    </p>
-
-    <input id="answer" placeholder="Enter your answer">
-    <br>
-    <button onclick="checkAnswer('elliott')">Submit</button>
-
-    <br><br>
-
-    <button id="hintButton" onclick='showHint([
-        "Each letter has been shifted 👀",
-        "Try moving letters backward",
-        "Shift by 3",
-        "It spells the name of the place"
-    ])' style="display:none;">Hint 💡</button>
-
-    <p id="hintBox" class="subtle"></p>
-    `;
-}
     if (step === 10) {
         app.innerHTML = `
+            ${getBackButton()}
             <h2>Quick question 3</h2>
             <p>Choose the energy that feels right for the end of the night.</p>
-
             <div class="choice-stack">
                 <img src="low3.jpg" alt="Low Adventure" onclick="answer('low')">
                 <img src="mid3.jpg" alt="Mid Adventure" onclick="answer('mid')">
@@ -393,6 +392,7 @@ function render() {
 
     if (step === 11) {
         app.innerHTML = `
+            ${getBackButton()}
             <h2>📍 Destination 3 unlocked</h2>
             <p>Go here to continue:</p>
             <button onclick="openMap(47.614720439007364, -122.31960224729806)">Open in Maps</button>
@@ -404,10 +404,16 @@ function render() {
     if (step === 12) {
         resetPuzzleState();
         app.innerHTML = `
-            <h2>Arrival Check ✅</h2>
-            <p>Find the physical code at this location to unlock the next clue.</p>
-
-            <input id="answer" placeholder="Enter location code">
+            ${getBackButton()}
+            <h2>Final Puzzle 📖</h2>
+            <p>
+                Look around you.<br>
+                The answer is not in the app anymore.
+            </p>
+            <p class="subtle">Between fiction and feeling… something waits.</p>
+            <img src="arrival3.jpg" alt="Hint location" class="hint-photo">
+            <p class="subtle">Find the hidden code to unlock the final destination.</p>
+            <input id="answer" placeholder="Enter final code">
             <br>
             <button onclick="checkAnswer('Smut')">Submit</button>
         `;
@@ -416,6 +422,7 @@ function render() {
     if (step === 13) {
         resetPuzzleState();
         app.innerHTML = `
+            ${getBackButton()}
             <h2>Clue 4</h2>
             <p>
                 Each choice you made led to your final destination.<br>
@@ -423,16 +430,15 @@ function render() {
                 The vibe of the night has been set in stone.<br>
                 Now let us reveal where we end the day.
             </p>
-
             <button onclick="nextStep(14)">Continue</button>
         `;
     }
 
     if (step === 14) {
         app.innerHTML = `
+            ${getBackButton()}
             <h2>Quick question 4</h2>
             <p>Last one. Pick what sounds most exciting.</p>
-
             <div class="choice-stack">
                 <img src="low4.jpg" alt="Low Adventure" onclick="answer('low')">
                 <img src="mid4.jpg" alt="Mid Adventure" onclick="answer('mid')">
@@ -443,18 +449,17 @@ function render() {
 
     if (step === 15) {
         app.innerHTML = `
+            ${getBackButton()}
             <h2>Calculating your perfect ending…</h2>
         `;
-
         setTimeout(() => {
             step = 16;
             render();
-        }, 1800);
+        }, 3000);
     }
 
     if (step === 16) {
         const choice = getFinalChoice();
-
         let place = "";
         let message = "";
         let coords = { lat: 0, lng: 0 };
@@ -462,24 +467,23 @@ function render() {
         if (choice === "low") {
             place = "Your Low Adventure Dinner Spot";
             message = "Tonight calls for something cozy, comforting, and easy";
-            coords = { lat: 47.99909021716266, lng:-122.21543217638319 };
+            coords = { lat: 47.99909021716266, lng: -122.21543217638319 };
         } else if (choice === "mid") {
             place = "Your Mid Adventure Dinner Spot";
             message = "A little adventure, a little comfort, and the perfect balance";
-            coords = { lat: 47.62142628458087, lng:-122.33340200385238 };
+            coords = { lat: 47.62142628458087, lng: -122.33340200385238 };
         } else {
             place = "Your High Adventure Dinner Spot";
             message = "You chose adventure, so let’s make tonight unforgettable";
-            coords = { lat: 47.62431328377069, lng:-122.29505178642042};
+            coords = { lat: 47.62431328377069, lng: -122.29505178642042 };
         }
 
         app.innerHTML = `
+            ${getBackButton()}
             <h2>Final Destination ❤️</h2>
             <p>${message}</p>
             <p><strong>${place}</strong></p>
-
             <button onclick="openMap(${coords.lat}, ${coords.lng})">Take me there</button>
-
             <br><br>
             <button onclick="nextStep(17)">Continue</button>
         `;
@@ -487,6 +491,7 @@ function render() {
 
     if (step === 17) {
         app.innerHTML = `
+            ${getBackButton()}
             <h1>❤️Congradulations, You did it❤️</h1>
             <p>I hope you had an awsome 25th b-day hunt.</p>
             <p>I love you.</p>
