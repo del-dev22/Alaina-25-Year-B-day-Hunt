@@ -130,7 +130,7 @@ function unlockGame() {
     }
 }
 
-function showCorrectScreen(next, message = "Correct ❤️", image = "correct.jpg") {
+function showCorrectScreen(next, message = "Correct ❤️", image = "correct1.jpg") {
     pendingStep = next;
     transitionMessage = message;
     transitionImage = image;
@@ -150,15 +150,15 @@ function checkAnswer(correct) {
 
     if (input === correct.toLowerCase()) {
         if (step === 1) {
-            showCorrectScreen(2, "Correct ☕", "correct1.jpg");
+            showCorrectScreen(2, "Correct", "correct1.jpg");
         } else if (step === 4) {
-            showCorrectScreen(5, "Nice work 🔓", "correct2.jpg");
+            showCorrectScreen(5, "Nice work", "correct2.jpg");
         } else if (step === 5) {
-            showCorrectScreen(6, "Correct ⚙️", "correct3.jpg");
+            showCorrectScreen(6, "Correct", "correct3.jpg");
         } else if (step === 8) {
-            showCorrectScreen(9, "You found it 👀", "correct4.jpg");
+            showCorrectScreen(9, "You found it", "correct4.jpg");
         } else if (step === 9) {
-            showCorrectScreen(10, "Decoded perfectly 📖", "correct5.jpg");
+            showCorrectScreen(10, "Decoded perfectly", "correct5.jpg");
         } else if (step === 12) {
             showCorrectScreen(13, "Final destination unlocked ❤️", "correct6.jpg");
         } else {
@@ -203,9 +203,9 @@ function answer(choice) {
     }
 
     if (step === 2) {
-        showCorrectScreen(3, "This choice has consequences...", "choice1.jpg");
+        showCorrectScreen(3, "Interesting... noted 😏", "choice1.jpg");
     } else if (step === 6) {
-        showCorrectScreen(7, "Interesting... noted 😏", "choice2.jpg");
+        showCorrectScreen(7, "This choice has consequences...", "choice2.jpg");
     } else if (step === 10) {
         showCorrectScreen(11, "The night is taking shape...", "choice3.jpg");
     } else if (step === 14) {
