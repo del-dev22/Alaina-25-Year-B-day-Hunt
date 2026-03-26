@@ -101,7 +101,7 @@ let scoreMid = 0;
 let scoreHigh = 0;
 
 let isUnlocked = false;
-const gameMasterCode = "BIRTHDAY2026";
+const gameMasterCode = "Ham B-Day";
 
 function nextStep(s) {
     step = s;
@@ -121,7 +121,7 @@ function unlockGame() {
         step = 0;
         render();
     } else {
-        alert("That code is not correct 🔒");
+        alert("Wrong!! Wait Until I let you in 🔒");
     }
 }
 
@@ -132,7 +132,7 @@ function checkAnswer(correct) {
     if (input === correct.toLowerCase()) {
         nextStep(step + 1);
     } else {
-        alert("Not quite 😊");
+        alert("Wrongo");
 
         const hintButton = document.getElementById("hintButton");
         if (hintButton && attempts >= 2) {
@@ -156,7 +156,7 @@ function answer(choice) {
     if (choice === "mid") scoreMid++;
     if (choice === "high") scoreHigh++;
 
-    document.getElementById("app").innerHTML = "<h2>Interesting choice 😏</h2>";
+    document.getElementById("app").innerHTML = "<h2>This choice has consequences,<br>but I get what you are putting down</h2>";
 
     setTimeout(() => {
         nextStep(step + 1);
@@ -190,25 +190,25 @@ function render() {
     if (!isUnlocked) {
         app.innerHTML = `
             <h1>🔒 Birthday Adventure</h1>
-            <p>This experience is waiting for the game master to begin.</p>
+            <p>Your experience is waiting for the game master to begin.</p>
             <p>Enter the game master code to unlock it.</p>
 
             <input id="masterCode" type="password" placeholder="Game master code">
             <br>
             <button onclick="unlockGame()">Unlock</button>
 
-            <p class="subtle">Unauthorized explorers will not pass 😏</p>
+            <p class="subtle">All bubble-blowing babies will be beaten senseless by every able-bodied patron in the bar</p>
         `;
         return;
     }
 
     if (step === 0) {
         app.innerHTML = `
-            <h1>❤️ Happy Birthday ❤️</h1>
-            <p>Welcome to your adventure.</p>
+            <h1>🍖 Happy Birthday 🍖</h1>
+            <p>Welcome to your B-day Hunt.</p>
             <p>I will be your game master for today.</p>
 
-            <img src="cover.jpg" alt="Cover Photo" class="photo-cover">
+            <img src="intro.jpg" alt="Cover Photo" class="photo-cover">
 
             <p class="subtle">Your mission: solve the clues, answer the mystery questions, and follow the trail.</p>
 
