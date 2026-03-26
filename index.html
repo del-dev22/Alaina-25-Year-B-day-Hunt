@@ -175,7 +175,7 @@ function answer(choice) {
 
     setTimeout(() => {
         nextStep(step + 1);
-    }, 1800);
+    }, 3000);
 }
 
 function openMap(lat, lng) {
@@ -405,7 +405,7 @@ function render() {
         resetPuzzleState();
         app.innerHTML = `
             ${getBackButton()}
-            <h2>Final Puzzle 📖</h2>
+            <h2>Final Puzzle</h2>
             <p>
                 Look around you.<br>
                 The answer is not in the app anymore.
