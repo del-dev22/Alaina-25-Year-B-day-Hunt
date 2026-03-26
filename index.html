@@ -101,7 +101,7 @@ let scoreMid = 0;
 let scoreHigh = 0;
 
 let isUnlocked = false;
-const gameMasterCode = "Ham B-Day";
+const gameMasterCode = "hambday";
 
 function nextStep(s) {
     step = s;
@@ -204,7 +204,7 @@ function render() {
 
     if (step === 0) {
         app.innerHTML = `
-            <h1>🍖 Happy Birthday 🍖</h1>
+            <h1>🍖Happy Birthday🍖</h1>
             <p>Welcome to your B-day Hunt.</p>
             <p>I will be your game master for today.</p>
 
@@ -219,11 +219,11 @@ function render() {
     if (step === 1) {
         resetPuzzleState();
         app.innerHTML = `
-            <h2>Clue 1 ☕</h2>
+            <h2>Clue 1</h2>
             <p>
                 Lets start off strong for your lovely day of birth.<br>
                 Decipher this code to unlock the first destination:<br><br>
-                20 8 5 &nbsp; 13 21 19 5
+                 20-8-5 13-21-19-5
             </p>
 
             <input id="answer" placeholder="Enter your answer">
@@ -234,7 +234,6 @@ function render() {
             <button id="hintButton" onclick='showHint([
                 "Try converting numbers into letters 👀",
                 "1 = A, 2 = B, 3 = C...",
-                "It is the coffee stop to start the morning ☕"
             ])' style="display:none;">Hint 💡</button>
 
             <p id="hintBox" class="subtle"></p>
@@ -258,7 +257,7 @@ function render() {
         app.innerHTML = `
             <h2>📍 Destination 1 unlocked</h2>
             <p>Go here to continue:</p>
-            <button onclick="openMap(48.001406507031, -122.22194166845058)">Open in Maps</button>
+            <button onclick="openMap(48.00156901609624, -122.22195784235124)">Open in Maps</button>
             <br><br>
             <button onclick="nextStep(4)">I'm Here</button>
         `;
@@ -268,44 +267,54 @@ function render() {
         resetPuzzleState();
         app.innerHTML = `
             <h2>Arrival Check ✅</h2>
-            <p>Find the physical code at this location to unlock the next clue.</p>
+        <p>Find the physical code at this location to unlock the next clue.</p>
 
-            <input id="answer" placeholder="Enter location code">
-            <br>
-            <button onclick="checkAnswer('MUSE25')">Submit</button>
-        `;
-    }
+        <img src="arrival1.jpg" 
+             alt="Hint location"
+             style="width:100%; border-radius:15px; margin:15px 0;">
+
+        <p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
+
+        <input id="answer" placeholder="Enter location code">
+        <br>
+        <button onclick="checkAnswer('MUSE25')">Submit</button>
+    `;
+}
 
     if (step === 5) {
-        resetPuzzleState();
-        app.innerHTML = `
-            <h2>Clue 2 🌊</h2>
-            <p>
-                Not quite the ocean, but it still tells a tale,<br>
-                Where waves meet the shore and sunsets don’t fail.<br>
-                We walked side by side with nothing to prove.<br>
-                Find the place where the water and skyline move.
-            </p>
+    resetPuzzleState();
 
-            <input id="answer" placeholder="Enter your answer">
-            <br>
-            <button onclick="checkAnswer('marina park')">Submit</button>
+    app.innerHTML = `
+    <h2>Clue 2</h2>
 
-            <br><br>
-            <button id="hintButton" onclick='showHint([
-                "Think waterfront 👀",
-                "Think shoreline and walking paths",
-                "It is Marina Park"
-            ])' style="display:none;">Hint 💡</button>
+    <p>
+   This puzzel will test your seattle history knowledge.<br>
+   My life span ran from 1906 to 1956<br>
+   Back in my day I was what some would call gassy<br>
+   I was the life of the party and brought seattle its energy
+    </p>
 
-            <p id="hintBox" class="subtle"></p>
-        `;
-    }
+    <input id="answer" placeholder="Enter your answer">
+    <br>
+    <button onclick="checkAnswer('gas works park')">Submit</button>
+
+    <br><br>
+
+    <button id="hintButton" onclick='showHint([
+        "Think industrial",
+        "Old structures that used to power something",
+        "It has an amazing view of Seattle skyline",
+        "Gas Works Park"
+    ])' style="display:none;">Hint 💡</button>
+
+    <p id="hintBox" class="subtle"></p>
+    `;
+}
 
     if (step === 6) {
         app.innerHTML = `
             <h2>Quick question 2</h2>
-            <p>Pick the mood that sounds best later tonight.</p>
+            <p>Whats more your speed? (Choose wisely).</p>
 
             <div class="choice-stack">
                 <img src="low2.jpg" alt="Low Adventure" onclick="answer('low')">
