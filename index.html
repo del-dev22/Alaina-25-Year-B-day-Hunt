@@ -3,63 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alaina 25th B-day Hunt</title>
+<title>Birthday Adventure</title>
 <style>
     body {
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(100deg, #5AA38F, #4faad7);
-        color: #33;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+        color: #333;
         text-align: center;
-        padding: 50px;
+        padding: 20px;
+        margin: 0;
     }
+
     .card {
-        background: White;
-        padding: 25px;
-        border-radius: 20px;
-        box-shadow: 0 100px 30px rgba(0,0,0,.5);
-        margin-top: 40px;
+        background: white;
+        max-width: 700px;
+        margin: 20px auto;
+        padding: 24px;
+        border-radius: 22px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.18);
     }
+
+    h1, h2 {
+        margin-top: 0;
+    }
+
+    p {
+        line-height: 1.5;
+    }
+
     button {
         padding: 12px 20px;
         border: none;
-        border-radius: 10px;
-        background: #5AA38F;
-        color: White;
-        font-size: 25px;
-        margin-top: 15px;
+        border-radius: 12px;
+        background: #ff6b81;
+        color: white;
+        font-size: 16px;
+        margin-top: 12px;
+        cursor: pointer;
     }
+
     input {
-        padding: 10px;
-        border-radius: 10px;
-        border: 1px solid;
-        width: 80%;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #ccc;
+        width: 85%;
+        max-width: 320px;
         margin-top: 10px;
+        font-size: 16px;
     }
-    .hidden {
-        display: none;
+
+    .photo-cover {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        border-radius: 18px;
+        margin: 16px 0;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    }
+
+    .choice-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px 0;
+    }
+
+    .choice-stack img {
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        cursor: pointer;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.10);
+        transition: transform 0.15s ease;
+    }
+
+    .choice-stack img:active {
+        transform: scale(0.98);
+    }
+
+    .subtle {
+        font-size: 14px;
+        color: #666;
     }
 </style>
 </head>
-
 <body>
 
-<div id="app" class="card">
-    <h1>🍖 Happy Birthday HAM 🍖</h1>
-    <p>I will be your game Master</p>
-    <img src="intro.jpg"
-        style="max-width: 100%; height: auto; border-radius: 15px; margin: 15px 0;">
-    <button onclick="nextStep(1)">Start</button>
-
-</div>
+<div id="app" class="card"></div>
 
 <script>
 let step = 0;
 let hintLevel = 0;
 let attempts = 0;
 
-let scoreIndian = 0;
-let scoreThai = 0;
-let scoreAdventurous = 0;
+let scoreLow = 0;
+let scoreMid = 0;
+let scoreHigh = 0;
+
+let isUnlocked = false;
+const gameMasterCode = "BIRTHDAY2026";
 
 function nextStep(s) {
     step = s;
@@ -71,6 +113,18 @@ function resetPuzzleState() {
     attempts = 0;
 }
 
+function unlockGame() {
+    const input = document.getElementById("masterCode").value.trim();
+
+    if (input === gameMasterCode) {
+        isUnlocked = true;
+        step = 0;
+        render();
+    } else {
+        alert("That code is not correct 🔒");
+    }
+}
+
 function checkAnswer(correct) {
     const input = document.getElementById("answer").value.trim().toLowerCase();
     attempts++;
@@ -79,6 +133,7 @@ function checkAnswer(correct) {
         nextStep(step + 1);
     } else {
         alert("Not quite 😊");
+
         const hintButton = document.getElementById("hintButton");
         if (hintButton && attempts >= 2) {
             hintButton.style.display = "inline-block";
@@ -88,19 +143,20 @@ function checkAnswer(correct) {
 
 function showHint(hints) {
     hintLevel++;
+
     const hintBox = document.getElementById("hintBox");
     if (!hintBox) return;
 
-    const index = Math.min(hintLevel - 1, hints.length - 1);
-    hintBox.innerText = hints[index];
+    const hintIndex = Math.min(hintLevel - 1, hints.length - 1);
+    hintBox.innerText = hints[hintIndex];
 }
 
 function answer(choice) {
-    if (choice === "indian") scoreIndian++;
-    if (choice === "thai") scoreThai++;
-    if (choice === "adventurous") scoreAdventurous++;
+    if (choice === "low") scoreLow++;
+    if (choice === "mid") scoreMid++;
+    if (choice === "high") scoreHigh++;
 
-    document.getElementById("app").innerHTML = "<h2>Nice choice 😏</h2>";
+    document.getElementById("app").innerHTML = "<h2>Interesting choice 😏</h2>";
 
     setTimeout(() => {
         nextStep(step + 1);
@@ -119,23 +175,43 @@ function openMap(lat, lng) {
 }
 
 function getFinalChoice() {
-    if (scoreIndian >= scoreThai && scoreIndian >= scoreAdventurous) {
-        return "indian";
-    } else if (scoreThai >= scoreIndian && scoreThai >= scoreAdventurous) {
-        return "thai";
+    if (scoreLow >= scoreMid && scoreLow >= scoreHigh) {
+        return "low";
+    } else if (scoreMid >= scoreLow && scoreMid >= scoreHigh) {
+        return "mid";
     } else {
-        return "adventurous";
+        return "high";
     }
 }
 
 function render() {
     const app = document.getElementById("app");
 
+    if (!isUnlocked) {
+        app.innerHTML = `
+            <h1>🔒 Birthday Adventure</h1>
+            <p>This experience is waiting for the game master to begin.</p>
+            <p>Enter the game master code to unlock it.</p>
+
+            <input id="masterCode" type="password" placeholder="Game master code">
+            <br>
+            <button onclick="unlockGame()">Unlock</button>
+
+            <p class="subtle">Unauthorized explorers will not pass 😏</p>
+        `;
+        return;
+    }
+
     if (step === 0) {
         app.innerHTML = `
-            <h1>🍖 Happy Birthday HAM 🍖</h1>
-            <p>I will be your game Master</p>
-            <img src="intro.jpg" style="max-width:100%; height:auto; border-radius:15px; margin:15px 0;">
+            <h1>❤️ Happy Birthday ❤️</h1>
+            <p>Welcome to your adventure.</p>
+            <p>I will be your game master for today.</p>
+
+            <img src="cover.jpg" alt="Cover Photo" class="photo-cover">
+
+            <p class="subtle">Your mission: solve the clues, answer the mystery questions, and follow the trail.</p>
+
             <button onclick="nextStep(1)">Start</button>
         `;
     }
@@ -145,31 +221,35 @@ function render() {
         app.innerHTML = `
             <h2>Clue 1 ☕</h2>
             <p>
-                Lets start off strong for your lovely day of birth,<br>
-                decipher this code to unlock the first destination:<br><br>
-                20-8-5-13-21-19-5
+                Lets start off strong for your lovely day of birth.<br>
+                Decipher this code to unlock the first destination:<br><br>
+                20 8 5 &nbsp; 13 21 19 5
             </p>
+
             <input id="answer" placeholder="Enter your answer">
             <br>
             <button onclick="checkAnswer('the muse')">Submit</button>
+
             <br><br>
-            <button id="hintButton" onclick="showHint([
-                'Try converting the numbers into letters 👀',
-                '1 = A, 2 = B, 3 = C...',
-                'It is a coffee place we talked about ☕'
-            ])" style="display:none;">Hint 💡</button>
-            <p id="hintBox" style="margin-top:10px; color:#555;"></p>
+            <button id="hintButton" onclick='showHint([
+                "Try converting numbers into letters 👀",
+                "1 = A, 2 = B, 3 = C...",
+                "It is the coffee stop to start the morning ☕"
+            ])' style="display:none;">Hint 💡</button>
+
+            <p id="hintBox" class="subtle"></p>
         `;
     }
 
     if (step === 2) {
         app.innerHTML = `
             <h2>Quick question 1</h2>
-            <p>What sounds best this evening?</p>
-            <div style="display:flex; flex-direction:column; gap:15px;">
-                <img src="survey1_indian.jpg" onclick="answer('indian')" style="width:100%; border-radius:15px; cursor:pointer;">
-                <img src="survey1_thai.jpg" onclick="answer('thai')" style="width:100%; border-radius:15px; cursor:pointer;">
-                <img src="survey1_adventure.jpg" onclick="answer('adventurous')" style="width:100%; border-radius:15px; cursor:pointer;">
+            <p>What kind of ending sounds best right now?</p>
+
+            <div class="choice-stack">
+                <img src="low1.jpg" alt="Low Adventure" onclick="answer('low')">
+                <img src="mid1.jpg" alt="Mid Adventure" onclick="answer('mid')">
+                <img src="high1.jpg" alt="High Adventure" onclick="answer('high')">
             </div>
         `;
     }
@@ -185,9 +265,11 @@ function render() {
     }
 
     if (step === 4) {
+        resetPuzzleState();
         app.innerHTML = `
             <h2>Arrival Check ✅</h2>
             <p>Find the physical code at this location to unlock the next clue.</p>
+
             <input id="answer" placeholder="Enter location code">
             <br>
             <button onclick="checkAnswer('MUSE25')">Submit</button>
@@ -197,34 +279,38 @@ function render() {
     if (step === 5) {
         resetPuzzleState();
         app.innerHTML = `
-            <h2>Clue 2</h2>
+            <h2>Clue 2 🌊</h2>
             <p>
                 Not quite the ocean, but it still tells a tale,<br>
                 Where waves meet the shore and sunsets don’t fail.<br>
-                We walked side by side with nothing to prove,<br>
+                We walked side by side with nothing to prove.<br>
                 Find the place where the water and skyline move.
             </p>
+
             <input id="answer" placeholder="Enter your answer">
             <br>
             <button onclick="checkAnswer('marina park')">Submit</button>
+
             <br><br>
-            <button id="hintButton" onclick="showHint([
-                'Think waterfront 👀',
-                'Think Kirkland shoreline',
-                'It is a park by the marina'
-            ])" style="display:none;">Hint 💡</button>
-            <p id="hintBox" style="margin-top:10px; color:#555;"></p>
+            <button id="hintButton" onclick='showHint([
+                "Think waterfront 👀",
+                "Think shoreline and walking paths",
+                "It is Marina Park"
+            ])' style="display:none;">Hint 💡</button>
+
+            <p id="hintBox" class="subtle"></p>
         `;
     }
 
     if (step === 6) {
         app.innerHTML = `
             <h2>Quick question 2</h2>
-            <p>Pick the mood that fits tonight best.</p>
-            <div style="display:flex; flex-direction:column; gap:15px;">
-                <img src="survey2_indian.jpg" onclick="answer('indian')" style="width:100%; border-radius:15px; cursor:pointer;">
-                <img src="survey2_thai.jpg" onclick="answer('thai')" style="width:100%; border-radius:15px; cursor:pointer;">
-                <img src="survey2_adventure.jpg" onclick="answer('adventurous')" style="width:100%; border-radius:15px; cursor:pointer;">
+            <p>Pick the mood that sounds best later tonight.</p>
+
+            <div class="choice-stack">
+                <img src="low2.jpg" alt="Low Adventure" onclick="answer('low')">
+                <img src="mid2.jpg" alt="Mid Adventure" onclick="answer('mid')">
+                <img src="high2.jpg" alt="High Adventure" onclick="answer('high')">
             </div>
         `;
     }
@@ -232,6 +318,7 @@ function render() {
     if (step === 7) {
         app.innerHTML = `
             <h2>📍 Destination 2 unlocked</h2>
+            <p>Go here to continue:</p>
             <button onclick="openMap(47.6765, -122.2090)">Open in Maps</button>
             <br><br>
             <button onclick="nextStep(8)">I'm Here</button>
@@ -239,9 +326,11 @@ function render() {
     }
 
     if (step === 8) {
+        resetPuzzleState();
         app.innerHTML = `
             <h2>Arrival Check ✅</h2>
-            <p>Find the physical code at this location.</p>
+            <p>Find the physical code at this location to unlock the next clue.</p>
+
             <input id="answer" placeholder="Enter location code">
             <br>
             <button onclick="checkAnswer('WATER25')">Submit</button>
@@ -251,34 +340,38 @@ function render() {
     if (step === 9) {
         resetPuzzleState();
         app.innerHTML = `
-            <h2>Clue 3</h2>
+            <h2>Clue 3 🌲</h2>
             <p>
                 Away from the noise, where the world slows down,<br>
                 A hidden escape just outside of town.<br>
                 Where silence says more than words ever could,<br>
                 Find the place wrapped in calm and wood.
             </p>
+
             <input id="answer" placeholder="Enter your answer">
             <br>
             <button onclick="checkAnswer('juanita bay park')">Submit</button>
+
             <br><br>
-            <button id="hintButton" onclick="showHint([
-                'Think nature 👀',
-                'Think a quiet park',
-                'It is Juanita Bay Park'
-            ])" style="display:none;">Hint 💡</button>
-            <p id="hintBox" style="margin-top:10px; color:#555;"></p>
+            <button id="hintButton" onclick='showHint([
+                "Think nature 👀",
+                "Think a peaceful park",
+                "It is Juanita Bay Park"
+            ])' style="display:none;">Hint 💡</button>
+
+            <p id="hintBox" class="subtle"></p>
         `;
     }
 
     if (step === 10) {
         app.innerHTML = `
             <h2>Quick question 3</h2>
-            <p>Choose what sounds most exciting right now.</p>
-            <div style="display:flex; flex-direction:column; gap:15px;">
-                <img src="survey3_indian.jpg" onclick="answer('indian')" style="width:100%; border-radius:15px; cursor:pointer;">
-                <img src="survey3_thai.jpg" onclick="answer('thai')" style="width:100%; border-radius:15px; cursor:pointer;">
-                <img src="survey3_adventure.jpg" onclick="answer('adventurous')" style="width:100%; border-radius:15px; cursor:pointer;">
+            <p>Choose the energy that feels right for the end of the night.</p>
+
+            <div class="choice-stack">
+                <img src="low3.jpg" alt="Low Adventure" onclick="answer('low')">
+                <img src="mid3.jpg" alt="Mid Adventure" onclick="answer('mid')">
+                <img src="high3.jpg" alt="High Adventure" onclick="answer('high')">
             </div>
         `;
     }
@@ -286,6 +379,7 @@ function render() {
     if (step === 11) {
         app.innerHTML = `
             <h2>📍 Destination 3 unlocked</h2>
+            <p>Go here to continue:</p>
             <button onclick="openMap(47.7081, -122.2275)">Open in Maps</button>
             <br><br>
             <button onclick="nextStep(12)">I'm Here</button>
@@ -293,9 +387,11 @@ function render() {
     }
 
     if (step === 12) {
+        resetPuzzleState();
         app.innerHTML = `
             <h2>Arrival Check ✅</h2>
-            <p>Find the physical code at this location.</p>
+            <p>Find the physical code at this location to unlock the next clue.</p>
+
             <input id="answer" placeholder="Enter location code">
             <br>
             <button onclick="checkAnswer('PARK25')">Submit</button>
@@ -305,46 +401,60 @@ function render() {
     if (step === 13) {
         resetPuzzleState();
         app.innerHTML = `
-            <h2>Final clue ❤️</h2>
+            <h2>Clue 4 ❤️</h2>
             <p>
-                The day is not over, there is one more surprise,<br>
+                The day is not over, there is one more surprise.<br>
                 A final stop chosen by your heart in disguise.<br>
-                Every little answer has helped clear the way,<br>
+                Every little answer has helped clear the way.<br>
                 Now let us reveal where we end the day.
             </p>
-            <button onclick="nextStep(14)">Reveal the final question</button>
+
+            <button onclick="nextStep(14)">Continue</button>
         `;
     }
 
     if (step === 14) {
         app.innerHTML = `
             <h2>Quick question 4</h2>
-            <p>Last one. Pick your perfect ending.</p>
-            <div style="display:flex; flex-direction:column; gap:15px;">
-                <img src="survey4_indian.jpg" onclick="answer('indian')" style="width:100%; border-radius:15px; cursor:pointer;">
-                <img src="survey4_thai.jpg" onclick="answer('thai')" style="width:100%; border-radius:15px; cursor:pointer;">
-                <img src="survey4_adventure.jpg" onclick="answer('adventurous')" style="width:100%; border-radius:15px; cursor:pointer;">
+            <p>Last one. Pick what sounds most exciting.</p>
+
+            <div class="choice-stack">
+                <img src="low4.jpg" alt="Low Adventure" onclick="answer('low')">
+                <img src="mid4.jpg" alt="Mid Adventure" onclick="answer('mid')">
+                <img src="high4.jpg" alt="High Adventure" onclick="answer('high')">
             </div>
         `;
     }
 
     if (step === 15) {
+        app.innerHTML = `
+            <h2>Calculating your perfect ending…</h2>
+        `;
+
+        setTimeout(() => {
+            step = 16;
+            render();
+        }, 1800);
+    }
+
+    if (step === 16) {
         const choice = getFinalChoice();
+
         let place = "";
         let message = "";
         let coords = { lat: 0, lng: 0 };
 
-        if (choice === "indian") {
-            place = "Your Indian Restaurant";
-            message = "Tonight feels bold, warm, and full of flavor ❤️";
+        if (choice === "low") {
+            place = "Your Low Adventure Dinner Spot";
+            message = "Tonight calls for something cozy, comforting, and easy ❤️";
             coords = { lat: 47.0000, lng: -122.0000 };
-        } else if (choice === "thai") {
-            place = "Your Thai Restaurant";
-            message = "Tonight feels vibrant, cozy, and a little playful ✨";
+        } else if (choice === "mid") {
+            place = "Your Mid Adventure Dinner Spot";
+            message = "A little adventure, a little comfort, and the perfect balance ✨";
             coords = { lat: 47.0000, lng: -122.0000 };
         } else {
-            place = "Your Adventurous Restaurant";
-            message = "Tonight calls for something new and unforgettable 🌍";
+            place = "Your High Adventure Dinner Spot";
+            message = "You chose adventure, so let’s make tonight unforgettable 🌍";
             coords = { lat: 47.0000, lng: -122.0000 };
         }
 
@@ -352,16 +462,19 @@ function render() {
             <h2>Final Destination ❤️</h2>
             <p>${message}</p>
             <p><strong>${place}</strong></p>
+
             <button onclick="openMap(${coords.lat}, ${coords.lng})">Take me there</button>
+
             <br><br>
-            <button onclick="nextStep(16)">Continue</button>
+            <button onclick="nextStep(17)">Continue</button>
         `;
     }
 
-    if (step === 16) {
+    if (step === 17) {
         app.innerHTML = `
             <h1>❤️ You Found Me ❤️</h1>
-            <p>This was never about the locations. It was always about us.</p>
+            <p>This was never just about the locations.</p>
+            <p>It was always about us.</p>
             <p>I love you.</p>
         `;
     }
