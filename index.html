@@ -47,7 +47,8 @@ input {
     font-size: 16px;
 }
 .photo-cover,
-.hint-photo {
+.hint-photo,
+.transition-photo {
     width: 100%;
     max-width: 100%;
     height: auto;
@@ -101,6 +102,10 @@ let scoreHigh = 0;
 let isUnlocked = false;
 let answeredSteps = {};
 
+let pendingStep = null;
+let transitionMessage = "";
+let transitionImage = "";
+
 const gameMasterCode = "hambday";
 
 function nextStep(s) {
@@ -121,8 +126,22 @@ function unlockGame() {
         step = 0;
         render();
     } else {
-        alert("Wrong!! Wait Until I let you in 🔒");
+        alert("Wrong! Wait until I let you in 🔒");
     }
+}
+
+function showCorrectScreen(next, message = "Correct ❤️", image = "correct.jpg") {
+    pendingStep = next;
+    transitionMessage = message;
+    transitionImage = image;
+    step = -1;
+    render();
+
+    setTimeout(() => {
+        step = pendingStep;
+        pendingStep = null;
+        render();
+    }, 3000);
 }
 
 function checkAnswer(correct) {
@@ -130,7 +149,21 @@ function checkAnswer(correct) {
     attempts++;
 
     if (input === correct.toLowerCase()) {
-        nextStep(step + 1);
+        if (step === 1) {
+            showCorrectScreen(2, "Correct ☕", "correct1.jpg");
+        } else if (step === 4) {
+            showCorrectScreen(5, "Nice work 🔓", "correct2.jpg");
+        } else if (step === 5) {
+            showCorrectScreen(6, "Correct ⚙️", "correct3.jpg");
+        } else if (step === 8) {
+            showCorrectScreen(9, "You found it 👀", "correct4.jpg");
+        } else if (step === 9) {
+            showCorrectScreen(10, "Decoded perfectly 📖", "correct5.jpg");
+        } else if (step === 12) {
+            showCorrectScreen(13, "Final destination unlocked ❤️", "correct6.jpg");
+        } else {
+            showCorrectScreen(step + 1, "Correct ❤️", "correct.jpg");
+        }
     } else {
         alert("Wrongo");
         const hintButton = document.getElementById("hintButton");
@@ -157,7 +190,7 @@ function goBack() {
 }
 
 function getBackButton() {
-    if (step === 0) return "";
+    if (step === 0 || step === -1) return "";
     return `<button class="back-btn" onclick="goBack()">← Back</button>`;
 }
 
@@ -169,13 +202,17 @@ function answer(choice) {
         answeredSteps[step] = choice;
     }
 
-    document.getElementById("app").innerHTML = `
-        <h2>This choice has consequences,<br>but I get what you are putting down</h2>
-    `;
-
-    setTimeout(() => {
-        nextStep(step + 1);
-    }, 3000);
+    if (step === 2) {
+        showCorrectScreen(3, "This choice has consequences...", "choice1.jpg");
+    } else if (step === 6) {
+        showCorrectScreen(7, "Interesting... noted 😏", "choice2.jpg");
+    } else if (step === 10) {
+        showCorrectScreen(11, "The night is taking shape...", "choice3.jpg");
+    } else if (step === 14) {
+        showCorrectScreen(15, "Final choice locked in ❤️", "choice4.jpg");
+    } else {
+        showCorrectScreen(step + 1, "Interesting choice 😏", "choice.jpg");
+    }
 }
 
 function openMap(lat, lng) {
@@ -211,6 +248,15 @@ function render() {
             <br>
             <button onclick="unlockGame()">Unlock</button>
             <p class="subtle">All bubble-blowing babies will be beaten senseless by every able-bodied patron in the bar</p>
+        `;
+        return;
+    }
+
+    if (step === -1) {
+        app.innerHTML = `
+            <h2>${transitionMessage}</h2>
+            <img src="${transitionImage}" alt="Transition image" class="transition-photo">
+            <p class="subtle">Get ready for the next part...</p>
         `;
         return;
     }
@@ -283,7 +329,7 @@ function render() {
             <p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
             <input id="answer" placeholder="Enter location code">
             <br>
-            <button onclick="checkAnswer('bean')">Submit</button>
+            <button onclick="checkAnswer('MUSE')">Submit</button>
         `;
     }
 
@@ -293,10 +339,10 @@ function render() {
             ${getBackButton()}
             <h2>Clue 2</h2>
             <p>
-                This puzzel will test your seattle history knowledge:<br><br>
-                My life span ran from 1906 to 1956.<br>
-                Back in my day I was what some would call gassy.<br>
-                I was the life of the party and brought seattle its energy.<br><br>
+                This puzzel will test your seattle history knowledge.<br>
+                My life span ran from 1906 to 1956<br>
+                Back in my day I was what some would call gassy<br>
+                I was the life of the party and brought seattle its energy<br>
                 What am I?
             </p>
             <input id="answer" placeholder="Enter your answer">
@@ -360,9 +406,7 @@ function render() {
                 Some stories don’t reveal themselves at first…<br>
                 Try shifting your perspective.
             </p>
-            <p style="font-size:22px; letter-spacing:3px;">
-                HOOLRWW
-            </p>
+            <p style="font-size:22px; letter-spacing:3px;">HOOLRWW</p>
             <input id="answer" placeholder="Enter your answer">
             <br>
             <button onclick="checkAnswer('elliott')">Submit</button>
@@ -405,7 +449,7 @@ function render() {
         resetPuzzleState();
         app.innerHTML = `
             ${getBackButton()}
-            <h2>Final Puzzle</h2>
+            <h2>Final Puzzle 📖</h2>
             <p>
                 Look around you.<br>
                 The answer is not in the app anymore.
@@ -451,6 +495,7 @@ function render() {
         app.innerHTML = `
             ${getBackButton()}
             <h2>Calculating your perfect ending…</h2>
+            <img src="final-calc.jpg" alt="Calculating" class="transition-photo">
         `;
         setTimeout(() => {
             step = 16;
