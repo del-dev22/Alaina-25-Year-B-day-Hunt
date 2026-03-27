@@ -240,11 +240,11 @@ function checkAnswer(correct) {
         } else if (step === 4) {
             showCorrectScreen(5, "Nice work 🔓", "correct2.jpg");
         } else if (step === 5) {
-            showCorrectScreen(6, "Correct ⚙️", "correct3.jpg");
+            showCorrectScreen(6, "Correct, keep hammering these out", "correct3.jpg");
         } else if (step === 8) {
             showCorrectScreen(9, "You found it 👀", "correct4.jpg");
         } else if (step === 9) {
-            showCorrectScreen(10, "Decoded perfectly 📖", "correct5.jpg");
+            showCorrectScreen(10, "Decoded perfectly, you will find a gem in the rough soon", "correct5.jpg");
         } else if (step === 12) {
             showCorrectScreen(13, "Final destination unlocked ❤️", "correct6.jpg");
         } else {
@@ -395,7 +395,7 @@ function render() {
                 </div>
 
                 <div class="board-stop" style="top:320px;">
-                    <img src="elliott-board.png" class="stop-icon ${boardProgress >= 3 ? '' : 'stop-locked'}" alt="Elliott Bay">
+                    <img src="elliott-board.JPG" class="stop-icon ${boardProgress >= 3 ? '' : 'stop-locked'}" alt="Elliott Bay">
                     <div class="stop-label">Elliott Bay</div>
                 </div>
 
