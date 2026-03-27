@@ -216,7 +216,7 @@ alert("Wrong! Wait until I let you in 🔒");
 }
 }
 
-function showCorrectScreen(next, message = "Correct ❤️", image = "correct.png") {
+function showCorrectScreen(next, message = "Correct ❤️", image = "correct.jpg") {
 pendingStep = next;
 transitionMessage = message;
 transitionImage = image;
@@ -258,7 +258,7 @@ showCorrectScreen(6, "Correct, keep hammering these out", "correct3.jpg");
 } else if (step === 8) {
 showCorrectScreen(9, "You found it 👀", "correct4.jpg");
 } else if (step === 9) {
-showCorrectScreen(10, "You will find a gem in the rough soon", "correct5.jpg");
+showCorrectScreen(10, "Keep Digging!!! You are almost there", "correct5.jpg");
 } else if (step === 12) {
 showCorrectScreen(13, "Final destination unlocked ❤️", "correct6.jpg");
 } else {
@@ -692,25 +692,34 @@ const choice = getFinalChoice();
 let place = "";
 let message = "";
 let coords = { lat: 0, lng: 0 };
+let dinnerPhoto = "";
+
 if (choice === "low") {
 place = "Your Low Adventure Dinner Spot";
 message = "Tonight calls for something cozy, comforting, and easy";
 coords = { lat: 47.99909021716266, lng: -122.21543217638319 };
+dinnerPhoto = "dinner-low.jpg";
 } else if (choice === "mid") {
 place = "Your Mid Adventure Dinner Spot";
 message = "A little adventure, a little comfort, and the perfect balance";
 coords = { lat: 47.62142628458087, lng: -122.33340200385238 };
+dinnerPhoto = "dinner-mid.jpg";
 } else {
 place = "Your High Adventure Dinner Spot";
 message = "You chose adventure, so let’s make tonight unforgettable";
 coords = { lat: 47.62431328377069, lng: -122.29505178642042 };
+dinnerPhoto = "dinner-high.jpg";
 }
+
 app.innerHTML = `
 ${getBackButton()}
 ${getBoardButton()}
 <h2>Final Destination ❤️</h2>
 <p>${message}</p>
 <p><strong>${place}</strong></p>
+
+<img src="${dinnerPhoto}" alt="${place}" class="hint-photo">
+
 <button onclick="openMap(${coords.lat}, ${coords.lng})">Take me there</button>
 <br><br>
 <button onclick="nextStep(17)">Continue</button>
