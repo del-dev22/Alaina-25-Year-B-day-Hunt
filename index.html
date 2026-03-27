@@ -176,6 +176,7 @@ let transitionMessage = "";
 let transitionImage = "";
 let boardProgress = 0;
 let returnStep = 0;
+let finalDinnerChoice = null;
 
 // destination reveal flags
 let museRevealed = false;
@@ -375,58 +376,80 @@ return;
 }
 
 if (step === 99) {
-updateBoardProgress();
+    updateBoardProgress();
 
-let playerTop = 640;
-if (boardProgress === 1) playerTop = 500;
-if (boardProgress === 2) playerTop = 350;
-if (boardProgress === 3) playerTop = 200;
-if (boardProgress === 4) playerTop = 70;
+    // determine player position
+    let playerTop = 640;
+    if (boardProgress === 1) playerTop = 500;
+    if (boardProgress === 2) playerTop = 350;
+    if (boardProgress === 3) playerTop = 200;
+    if (boardProgress === 4) playerTop = 70;
 
-app.innerHTML = `
-<h2 class="board-title">Adventure Board</h2>
-<p class="subtle">Your journey so far</p>
-<div class="board-wrap">
+    // determine final dinner image
+    let dinnerBoardImage = "mystery.jpg";
 
-<div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:560px; height:100px;"></div>
-<div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:410px; height:100px;"></div>
-<div class="path-segment ${boardProgress >= 3 ? 'path-visible' : 'path-hidden'}" style="top:260px; height:100px;"></div>
-<div class="path-segment ${boardProgress >= 4 ? 'path-visible' : 'path-hidden'}" style="top:110px; height:100px;"></div>
+    if (dinnerRevealed && finalDinnerChoice === "low") {
+        dinnerBoardImage = "dinner-low.jpg";
+    }
+    if (dinnerRevealed && finalDinnerChoice === "mid") {
+        dinnerBoardImage = "dinner-mid.jpg";
+    }
+    if (dinnerRevealed && finalDinnerChoice === "high") {
+        dinnerBoardImage = "dinner-high.jpg";
+    }
 
-<div class="board-stop" style="top:620px;">
-<img src="${museRevealed ? 'muse-board.png' : 'mystery.jpg'}"
-class="stop-icon ${museRevealed ? '' : 'stop-locked'}"
-alt="The Muse">
-<div class="stop-label">${museRevealed ? 'The Muse' : '???'}</div>
-</div>
+    app.innerHTML = `
+        <h2 class="board-title">Adventure Board</h2>
+        <p class="subtle">Your journey so far</p>
 
-<div class="board-stop" style="top:470px;">
-<img src="${gasRevealed ? 'gasworks-board.png' : 'mystery.jpg'}"
-class="stop-icon ${gasRevealed ? '' : 'stop-locked'}"
-alt="Gas Works Park">
-<div class="stop-label">${gasRevealed ? 'Gas Works' : '???'}</div>
-</div>
+        <div class="board-wrap">
 
-<div class="board-stop" style="top:320px;">
-<img src="${elliottRevealed ? 'elliott-board.jpg' : 'mystery.jpg'}"
-class="stop-icon ${elliottRevealed ? '' : 'stop-locked'}"
-alt="Elliott Bay">
-<div class="stop-label">${elliottRevealed ? 'Elliott Bay' : '???'}</div>
-</div>
+            <!-- PATH -->
+            <div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:560px; height:100px;"></div>
+            <div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:410px; height:100px;"></div>
+            <div class="path-segment ${boardProgress >= 3 ? 'path-visible' : 'path-hidden'}" style="top:260px; height:100px;"></div>
+            <div class="path-segment ${boardProgress >= 4 ? 'path-visible' : 'path-hidden'}" style="top:110px; height:100px;"></div>
 
-<div class="board-stop" style="top:170px;">
-<img src="${dinnerRevealed ? 'dinner-board.jpg' : 'mystery.jpg'}"
-class="stop-icon ${dinnerRevealed ? '' : 'stop-locked'}"
-alt="Final Dinner">
-<div class="stop-label">${dinnerRevealed ? 'Final Dinner' : '???'}</div>
-</div>
+            <!-- MUSE -->
+            <div class="board-stop" style="top:620px;">
+                <img src="${museRevealed ? 'muse-board.png' : 'mystery.jpg'}"
+                     class="stop-icon ${museRevealed ? '' : 'stop-locked'}">
+                <div class="stop-label">${museRevealed ? 'The Muse' : '???'}</div>
+            </div>
 
-<img src="player.jpg" class="player-piece" alt="Player" style="top:${playerTop}px;">
-</div>
-<p class="board-note">Hidden stops will reveal only after you unlock them.</p>
-<button onclick="closeBoard()">Back to Game</button>
-`;
-return;
+            <!-- GAS WORKS -->
+            <div class="board-stop" style="top:470px;">
+                <img src="${gasRevealed ? 'gasworks-board.png' : 'mystery.jpg'}"
+                     class="stop-icon ${gasRevealed ? '' : 'stop-locked'}">
+                <div class="stop-label">${gasRevealed ? 'Gas Works' : '???'}</div>
+            </div>
+
+            <!-- ELLIOTT -->
+            <div class="board-stop" style="top:320px;">
+                <img src="${elliottRevealed ? 'elliott-board.jpg' : 'mystery.jpg'}"
+                     class="stop-icon ${elliottRevealed ? '' : 'stop-locked'}">
+                <div class="stop-label">${elliottRevealed ? 'Elliott Bay' : '???'}</div>
+            </div>
+
+            <!-- FINAL DINNER -->
+            <div class="board-stop" style="top:170px;">
+                <img src="${dinnerRevealed ? dinnerBoardImage : 'mystery.jpg'}"
+                     class="stop-icon ${dinnerRevealed ? '' : 'stop-locked'}">
+                <div class="stop-label">${dinnerRevealed ? 'Your Dinner' : '???'}</div>
+            </div>
+
+            <!-- PLAYER -->
+            <img src="player.JPG"
+                 class="player-piece"
+                 style="top:${playerTop}px;">
+
+        </div>
+
+        <p class="board-note">Hidden stops will reveal only after you unlock them.</p>
+
+        <button onclick="closeBoard()">Back to Game</button>
+    `;
+    return;
 }
 
 if (step === 0) {
@@ -689,6 +712,7 @@ render();
 
 if (step === 16) {
 const choice = getFinalChoice();
+finalDinnerChoice = choice;
 let place = "";
 let message = "";
 let coords = { lat: 0, lng: 0 };
