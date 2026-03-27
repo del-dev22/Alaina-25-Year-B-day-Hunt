@@ -215,7 +215,7 @@ function unlockGame() {
     }
 }
 
-function showCorrectScreen(next, message = "Correct ❤️", image = "correct.jpg") {
+function showCorrectScreen(next, message = "Correct ❤️", image = "correct.png") {
     pendingStep = next;
     transitionMessage = message;
     transitionImage = image;
@@ -227,7 +227,7 @@ function showCorrectScreen(next, message = "Correct ❤️", image = "correct.jp
         pendingStep = null;
         updateBoardProgress();
         render();
-    }, 3000);
+    }, 6000);
 }
 
 function checkAnswer(correct) {
@@ -399,14 +399,14 @@ function render() {
             </div>
 
             <div class="board-stop" style="top:320px;">
-                <img src="${boardProgress >= 3 ? 'elliott-board.JPG' : 'mystery.jpg'}"
+                <img src="${boardProgress >= 3 ? 'elliott-board.jpg' : 'mystery.jpg'}"
                      class="stop-icon ${boardProgress >= 3 ? '' : 'stop-locked'}"
                      alt="Elliott Bay">
                 <div class="stop-label">${boardProgress >= 3 ? 'Elliott Bay' : '???'}</div>
             </div>
 
             <div class="board-stop" style="top:170px;">
-                <img src="${boardProgress >= 4 ? 'dinner-board.JPG' : 'mystery.jpg'}"
+                <img src="${boardProgress >= 4 ? 'dinner-board.jpg' : 'mystery.jpg'}"
                      class="stop-icon ${boardProgress >= 4 ? '' : 'stop-locked'}"
                      alt="Final Dinner">
                 <div class="stop-label">${boardProgress >= 4 ? 'Final Dinner' : '???'}</div>
@@ -423,7 +423,7 @@ function render() {
 }
     if (step === 0) {
         app.innerHTML = `
-            <h1>🍖Happy Birthday🍖</h1>
+            <h1>🍖Happy Birthday</h1>
             <p>Welcome to your B-day Hunt.</p>
             <p>I will be your game master for today.</p>
             <img src="intro.jpg" alt="Cover Photo" class="photo-cover">
@@ -493,7 +493,7 @@ function render() {
             <p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
             <input id="answer" placeholder="Enter location code">
             <br>
-            <button onclick="checkAnswer('MUSE')">Submit</button>
+            <button onclick="checkAnswer('bean')">Submit</button>
         `;
     }
 
@@ -507,7 +507,7 @@ function render() {
                 This puzzel will test your seattle history knowledge.<br>
                 My life span ran from 1906 to 1956<br>
                 Back in my day I was what some would call gassy<br>
-                I was the life of the party and brought seattle its energy<br>
+                I was the life of the party and brought seattle its energy<br><br>
                 What am I?
             </p>
             <input id="answer" placeholder="Enter your answer">
@@ -624,7 +624,7 @@ function render() {
             <h2>Final Puzzle 📖</h2>
             <p>
                 Look around you.<br>
-                The answer is not in the app anymore.
+                The answer is not in the app.
             </p>
             <p class="subtle">Between fiction and feeling… something waits.</p>
             <img src="arrival3.jpg" alt="Hint location" class="hint-photo">
@@ -643,8 +643,7 @@ function render() {
             <h2>Clue 4</h2>
             <p>
                 Each choice you made led to your final destination.<br>
-                A final stop chosen by the birthday girl.<br>
-                The vibe of the night has been set in stone.<br>
+                The vibe of the night has been chosen by you.....<br><br>
                 Now let us reveal where we end the day.
             </p>
             <button onclick="nextStep(14)">Continue</button>
@@ -655,8 +654,8 @@ function render() {
         app.innerHTML = `
             ${getBackButton()}
             ${getBoardButton()}
-            <h2>Quick question 4</h2>
-            <p>Last one. Pick what sounds most exciting.</p>
+            <h2>Wait!! One last question 4</h2>
+            <p>Pick what sounds most exciting.</p>
             <div class="choice-stack">
                 <img src="low4.jpg" alt="Low Adventure" onclick="answer('low')">
                 <img src="mid4.jpg" alt="Mid Adventure" onclick="answer('mid')">
@@ -676,7 +675,7 @@ function render() {
             step = 16;
             updateBoardProgress();
             render();
-        }, 3000);
+        }, 8000);
     }
 
     if (step === 16) {
