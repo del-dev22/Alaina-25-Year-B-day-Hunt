@@ -6,723 +6,728 @@
 <title>Birthday Adventure</title>
 <style>
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: linear-gradient(135deg, #76a5af, #20505b);
-    color: #333;
-    text-align: center;
-    padding: 20px;
-    margin: 0;
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+background: linear-gradient(135deg, #76a5af, #20505b);
+color: #333;
+text-align: center;
+padding: 20px;
+margin: 0;
 }
 .card {
-    background: white;
-    max-width: 700px;
-    margin: 20px auto;
-    padding: 24px;
-    border-radius: 22px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+background: white;
+max-width: 700px;
+margin: 20px auto;
+padding: 24px;
+border-radius: 22px;
+box-shadow: 0 12px 30px rgba(0,0,0,0.18);
 }
 h1, h2 {
-    margin-top: 0;
+margin-top: 0;
 }
 p {
-    line-height: 1.5;
+line-height: 1.5;
 }
 button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 12px;
-    background: #ff6b81;
-    color: white;
-    font-size: 16px;
-    margin-top: 12px;
-    cursor: pointer;
+padding: 12px 20px;
+border: none;
+border-radius: 12px;
+background: #ff6b81;
+color: white;
+font-size: 16px;
+margin-top: 12px;
+cursor: pointer;
 }
 input {
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    width: 85%;
-    max-width: 320px;
-    margin-top: 10px;
-    font-size: 16px;
+padding: 12px;
+border-radius: 12px;
+border: 1px solid #ccc;
+width: 85%;
+max-width: 320px;
+margin-top: 10px;
+font-size: 16px;
 }
 .photo-cover,
 .hint-photo,
 .transition-photo {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    border-radius: 18px;
-    margin: 16px 0;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+width: 100%;
+max-width: 100%;
+height: auto;
+border-radius: 18px;
+margin: 16px 0;
+box-shadow: 0 8px 18px rgba(0,0,0,0.12);
 }
 .choice-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 10px 0;
+display: flex;
+flex-direction: column;
+gap: 15px;
+padding: 10px 0;
 }
 .choice-stack img {
-    width: 100%;
-    height: auto;
-    border-radius: 16px;
-    cursor: pointer;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.10);
-    transition: transform 0.15s ease;
+width: 100%;
+height: auto;
+border-radius: 16px;
+cursor: pointer;
+box-shadow: 0 8px 16px rgba(0,0,0,0.10);
+transition: transform 0.15s ease;
 }
 .choice-stack img:active {
-    transform: scale(0.98);
+transform: scale(0.98);
 }
 .subtle {
-    font-size: 14px;
-    color: #666;
+font-size: 14px;
+color: #666;
 }
 .back-btn {
-    background: #d9d9d9;
-    color: #333;
-    margin-bottom: 16px;
-    font-size: 14px;
-    padding: 10px 14px;
+background: #d9d9d9;
+color: #333;
+margin-bottom: 16px;
+font-size: 14px;
+padding: 10px 14px;
 }
 .board-wrap {
-    position: relative;
-    width: 100%;
-    max-width: 360px;
-    height: 760px;
-    margin: 10px auto 0;
-    background: linear-gradient(180deg, #fff8ef, #ffe5ec);
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: inset 0 0 0 3px rgba(255,255,255,0.7);
+position: relative;
+width: 100%;
+max-width: 360px;
+height: 760px;
+margin: 10px auto 0;
+background: linear-gradient(180deg, #fff8ef, #ffe5ec);
+border-radius: 24px;
+overflow: hidden;
+box-shadow: inset 0 0 0 3px rgba(255,255,255,0.7);
 }
 .board-title {
-    margin-bottom: 8px;
+margin-bottom: 8px;
 }
 .path-segment {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 12px;
-    border-radius: 999px;
-    background: #ffd166;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+width: 12px;
+border-radius: 999px;
+background: #ffd166;
+box-shadow: 0 4px 10px rgba(0,0,0,0.12);
 }
 .path-hidden {
-    opacity: 0;
+opacity: 0;
 }
 .path-visible {
-    opacity: 1;
+opacity: 1;
 }
 .board-stop {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 88px;
-    text-align: center;
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+width: 88px;
+text-align: center;
 }
 .stop-icon {
-    width: 72px;
-    height: 72px;
-    object-fit: cover;
-    border-radius: 20px;
-    background: #fff;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.16);
-    border: 3px solid white;
+width: 72px;
+height: 72px;
+object-fit: cover;
+border-radius: 20px;
+background: #fff;
+box-shadow: 0 6px 14px rgba(0,0,0,0.16);
+border: 3px solid white;
 }
 .stop-label {
-    margin-top: 6px;
-    font-size: 13px;
-    color: #444;
-    font-weight: 600;
+margin-top: 6px;
+font-size: 13px;
+color: #444;
+font-weight: 600;
 }
 .stop-locked {
-    opacity: 0.35;
-    filter: grayscale(1);
+opacity: 0.35;
+filter: grayscale(1);
 }
 .player-piece {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 64px;
-    height: 64px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 4px solid white;
-    background: #fff;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.18);
-    transition: top 0.6s ease;
-    z-index: 5;
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+width: 64px;
+height: 64px;
+object-fit: cover;
+border-radius: 50%;
+border: 4px solid white;
+background: #fff;
+box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+transition: top 0.6s ease;
+z-index: 5;
 }
 .board-note {
-    font-size: 14px;
-    color: #666;
-    margin-top: 10px;
+font-size: 14px;
+color: #666;
+margin-top: 10px;
 }
 </style>
 </head>
 <body>
-
 <div id="app" class="card"></div>
-
 <script>
 let step = 0;
 let hintLevel = 0;
 let attempts = 0;
-
 let scoreLow = 0;
 let scoreMid = 0;
 let scoreHigh = 0;
-
 let isUnlocked = false;
 let answeredSteps = {};
-
 let pendingStep = null;
 let transitionMessage = "";
 let transitionImage = "";
-
 let boardProgress = 0;
 let returnStep = 0;
+
+// destination reveal flags
+let museRevealed = false;
+let gasRevealed = false;
+let elliottRevealed = false;
+let dinnerRevealed = false;
 
 const gameMasterCode = "hambday";
 
 function updateBoardProgress() {
-    if (step >= 5) boardProgress = Math.max(boardProgress, 1);   // The Muse revealed only after Muse code
-    if (step >= 9) boardProgress = Math.max(boardProgress, 2);   // Gas Works revealed only after Gas code
-    if (step >= 13) boardProgress = Math.max(boardProgress, 3);  // Elliott Bay revealed only after Elliott code
-    if (step >= 16) boardProgress = Math.max(boardProgress, 4);  // Final dinner revealed
+let progress = 0;
+if (museRevealed) progress = 1;
+if (gasRevealed) progress = 2;
+if (elliottRevealed) progress = 3;
+if (dinnerRevealed) progress = 4;
+boardProgress = progress;
 }
 
 function nextStep(s) {
-    step = s;
-    updateBoardProgress();
-    render();
+step = s;
+updateBoardProgress();
+render();
 }
 
 function resetPuzzleState() {
-    hintLevel = 0;
-    attempts = 0;
+hintLevel = 0;
+attempts = 0;
 }
 
 function unlockGame() {
-    const input = document.getElementById("masterCode").value.trim();
-
-    if (input === gameMasterCode) {
-        isUnlocked = true;
-        step = 0;
-        render();
-    } else {
-        alert("Wrong! Wait until I let you in 🔒");
-    }
+const input = document.getElementById("masterCode").value.trim();
+if (input === gameMasterCode) {
+isUnlocked = true;
+step = 0;
+render();
+} else {
+alert("Wrong! Wait until I let you in 🔒");
+}
 }
 
 function showCorrectScreen(next, message = "Correct ❤️", image = "correct.png") {
-    pendingStep = next;
-    transitionMessage = message;
-    transitionImage = image;
-    step = -1;
-    render();
-
-    setTimeout(() => {
-        step = pendingStep;
-        pendingStep = null;
-        updateBoardProgress();
-        render();
-    }, 6000);
+pendingStep = next;
+transitionMessage = message;
+transitionImage = image;
+step = -1;
+render();
+setTimeout(() => {
+step = pendingStep;
+pendingStep = null;
+updateBoardProgress();
+render();
+}, 6000);
 }
 
 function checkAnswer(correct) {
-    const input = document.getElementById("answer").value.trim().toLowerCase();
-    attempts++;
+const input = document.getElementById("answer").value.trim().toLowerCase();
+attempts++;
 
-    if (input === correct.toLowerCase()) {
-        if (step === 1) {
-            showCorrectScreen(2, "Correct ☕", "correct1.jpg");
-        } else if (step === 4) {
-            showCorrectScreen(5, "Nice work 🔓", "correct2.jpg");
-        } else if (step === 5) {
-            showCorrectScreen(6, "Correct, keep hammering these out", "correct3.jpg");
-        } else if (step === 8) {
-            showCorrectScreen(9, "You found it 👀", "correct4.jpg");
-        } else if (step === 9) {
-            showCorrectScreen(10, "You will find a gem in the rough soon", "correct5.jpg");
-        } else if (step === 12) {
-            showCorrectScreen(13, "Final destination unlocked ❤️", "correct6.jpg");
-        } else {
-            showCorrectScreen(step + 1, "Correct ❤️", "correct.jpg");
-        }
-    } else {
-        alert("Wrongo");
-        const hintButton = document.getElementById("hintButton");
-        if (hintButton && attempts >= 2) {
-            hintButton.style.display = "inline-block";
-        }
-    }
+if (input === correct.toLowerCase()) {
+
+if (step === 4) {
+museRevealed = true;
+updateBoardProgress();
+}
+if (step === 8) {
+gasRevealed = true;
+updateBoardProgress();
+}
+if (step === 12) {
+elliottRevealed = true;
+updateBoardProgress();
+}
+
+if (step === 1) {
+showCorrectScreen(2, "Correct ☕", "correct1.jpg");
+} else if (step === 4) {
+showCorrectScreen(5, "Nice work 🔓", "correct2.jpg");
+} else if (step === 5) {
+showCorrectScreen(6, "Correct, keep hammering these out", "correct3.jpg");
+} else if (step === 8) {
+showCorrectScreen(9, "You found it 👀", "correct4.jpg");
+} else if (step === 9) {
+showCorrectScreen(10, "You will find a gem in the rough soon", "correct5.jpg");
+} else if (step === 12) {
+showCorrectScreen(13, "Final destination unlocked ❤️", "correct6.jpg");
+} else {
+showCorrectScreen(step + 1, "Correct ❤️", "correct.jpg");
+}
+} else {
+alert("Wrongo");
+const hintButton = document.getElementById("hintButton");
+if (hintButton && attempts >= 2) {
+hintButton.style.display = "inline-block";
+}
+}
 }
 
 function showHint(hints) {
-    hintLevel++;
-    const hintBox = document.getElementById("hintBox");
-    if (!hintBox) return;
-
-    const hintIndex = Math.min(hintLevel - 1, hints.length - 1);
-    hintBox.innerText = hints[hintIndex];
+hintLevel++;
+const hintBox = document.getElementById("hintBox");
+if (!hintBox) return;
+const hintIndex = Math.min(hintLevel - 1, hints.length - 1);
+hintBox.innerText = hints[hintIndex];
 }
 
 function goBack() {
-    if (step > 0) {
-        step--;
-        render();
-    }
+if (step > 0) {
+step--;
+render();
+}
 }
 
 function getBackButton() {
-    if (step === 0 || step === -1 || step === 99) return "";
-    return `<button class="back-btn" onclick="goBack()">← Back</button>`;
+if (step === 0 || step === -1 || step === 99) return "";
+return `<button class="back-btn" onclick="goBack()">← Back</button>`;
 }
 
 function viewBoard() {
-    returnStep = step;
-    updateBoardProgress();
-    step = 99;
-    render();
+returnStep = step;
+updateBoardProgress();
+step = 99;
+render();
 }
 
 function closeBoard() {
-    step = returnStep;
-    render();
+step = returnStep;
+render();
 }
 
 function getBoardButton() {
-    if (step === 99 || step === -1 || !isUnlocked) return "";
-    return `<button class="back-btn" onclick="viewBoard()">🗺️ View Board</button>`;
+if (step === 99 || step === -1 || !isUnlocked) return "";
+return `<button class="back-btn" onclick="viewBoard()">️ View Board</button>`;
 }
 
 function answer(choice) {
-    if (!answeredSteps[step]) {
-        if (choice === "low") scoreLow++;
-        if (choice === "mid") scoreMid++;
-        if (choice === "high") scoreHigh++;
-        answeredSteps[step] = choice;
-    }
-
-    if (step === 2) {
-        showCorrectScreen(3, "This choice has consequences...", "choice1.jpg");
-    } else if (step === 6) {
-        showCorrectScreen(7, "Interesting... noted 😏", "choice2.jpg");
-    } else if (step === 10) {
-        showCorrectScreen(11, "The night is taking shape...", "choice3.png");
-    } else if (step === 14) {
-        showCorrectScreen(15, "Final choice locked in ❤️", "choice4.jpg");
-    } else {
-        showCorrectScreen(step + 1, "Interesting choice 😏", "choice.jpg");
-    }
+if (!answeredSteps[step]) {
+if (choice === "low") scoreLow++;
+if (choice === "mid") scoreMid++;
+if (choice === "high") scoreHigh++;
+answeredSteps[step] = choice;
+}
+if (step === 2) {
+showCorrectScreen(3, "This choice has consequences...", "choice1.jpg");
+} else if (step === 6) {
+showCorrectScreen(7, "Interesting... noted 😏", "choice2.jpg");
+} else if (step === 10) {
+showCorrectScreen(11, "The night is taking shape...", "choice3.png");
+} else if (step === 14) {
+showCorrectScreen(15, "Final choice locked in ❤️", "choice4.jpg");
+} else {
+showCorrectScreen(step + 1, "Interesting choice 😏", "choice.jpg");
+}
 }
 
 function openMap(lat, lng) {
-    const googleUrl = `https://maps.google.com/?q=${lat},${lng}`;
-    const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}`;
-
-    window.location.href = googleUrl;
-
-    setTimeout(() => {
-        window.location.href = appleUrl;
-    }, 1200);
+const googleUrl = `https://maps.google.com/?q=${lat},${lng}`;
+const appleUrl = `https://maps.apple.com/?ll=${lat},${lng}`;
+window.location.href = googleUrl;
+setTimeout(() => {
+window.location.href = appleUrl;
+}, 1200);
 }
 
 function getFinalChoice() {
-    if (scoreLow >= scoreMid && scoreLow >= scoreHigh) {
-        return "low";
-    } else if (scoreMid >= scoreLow && scoreMid >= scoreHigh) {
-        return "mid";
-    } else {
-        return "high";
-    }
+if (scoreLow >= scoreMid && scoreLow >= scoreHigh) {
+return "low";
+} else if (scoreMid >= scoreLow && scoreMid >= scoreHigh) {
+return "mid";
+} else {
+return "high";
+}
 }
 
 function render() {
-    const app = document.getElementById("app");
+const app = document.getElementById("app");
 
-    if (!isUnlocked) {
-        app.innerHTML = `
-            <h1>🔒 Birthday Adventure</h1>
-            <p>Your experience is waiting for the game master to begin.</p>
-            <p>Enter the game master code to unlock it.</p>
-            <input id="masterCode" type="password" placeholder="Game master code">
-            <br>
-            <button onclick="unlockGame()">Unlock</button>
-            <p class="subtle">All bubble-blowing babies will be beaten senseless by every able-bodied patron in the bar</p>
-        `;
-        return;
-    }
-
-    if (step === -1) {
-        app.innerHTML = `
-            <h2>${transitionMessage}</h2>
-            <img src="${transitionImage}" alt="Transition image" class="transition-photo">
-            <p class="subtle">Get ready for the next part...</p>
-        `;
-        return;
-    }
-
-    if (step === 99) {
-    updateBoardProgress();
-
-    let playerTop = 640;
-    if (boardProgress === 1) playerTop = 500;
-    if (boardProgress === 2) playerTop = 350;
-    if (boardProgress === 3) playerTop = 200;
-    if (boardProgress === 4) playerTop = 70;
-
-    app.innerHTML = `
-        <h2 class="board-title">Adventure Board</h2>
-        <p class="subtle">Your journey so far</p>
-
-        <div class="board-wrap">
-
-            <div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:560px; height:100px;"></div>
-            <div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:410px; height:100px;"></div>
-            <div class="path-segment ${boardProgress >= 3 ? 'path-visible' : 'path-hidden'}" style="top:260px; height:100px;"></div>
-            <div class="path-segment ${boardProgress >= 4 ? 'path-visible' : 'path-hidden'}" style="top:110px; height:100px;"></div>
-
-            <div class="board-stop" style="top:620px;">
-                <img src="${boardProgress >= 1 ? 'muse-board.png' : 'mystery.jpg'}"
-                     class="stop-icon ${boardProgress >= 1 ? '' : 'stop-locked'}"
-                     alt="The Muse">
-                <div class="stop-label">${boardProgress >= 1 ? 'The Muse' : '???'}</div>
-            </div>
-
-            <div class="board-stop" style="top:470px;">
-                <img src="${boardProgress >= 2 ? 'gasworks-board.png' : 'mystery.jpg'}"
-                     class="stop-icon ${boardProgress >= 2 ? '' : 'stop-locked'}"
-                     alt="Gas Works Park">
-                <div class="stop-label">${boardProgress >= 2 ? 'Gas Works' : '???'}</div>
-            </div>
-
-            <div class="board-stop" style="top:320px;">
-                <img src="${boardProgress >= 3 ? 'elliott-board.jpg' : 'mystery.jpg'}"
-                     class="stop-icon ${boardProgress >= 3 ? '' : 'stop-locked'}"
-                     alt="Elliott Bay">
-                <div class="stop-label">${boardProgress >= 3 ? 'Elliott Bay' : '???'}</div>
-            </div>
-
-            <div class="board-stop" style="top:170px;">
-                <img src="${boardProgress >= 4 ? 'dinner-board.jpg' : 'mystery.jpg'}"
-                     class="stop-icon ${boardProgress >= 4 ? '' : 'stop-locked'}"
-                     alt="Final Dinner">
-                <div class="stop-label">${boardProgress >= 4 ? 'Final Dinner' : '???'}</div>
-            </div>
-
-            <img src="player.JPG" class="player-piece" alt="Player" style="top:${playerTop}px;">
-
-        </div>
-
-        <p class="board-note">Hidden stops will reveal only after you unlock them.</p>
-        <button onclick="closeBoard()">Back to Game</button>
-    `;
-    return;
-}
-    if (step === 0) {
-        app.innerHTML = `
-            <h1>Happy Birthday 🍖</h1>
-            <p>Welcome to your B-day Hunt.</p>
-            <p>I will be your game master for today.</p>
-            <img src="intro.jpg" alt="Cover Photo" class="photo-cover">
-            <p class="subtle">Your mission: solve the clues, answer the mystery questions, and follow the trail.</p>
-            <button onclick="nextStep(1)">Start</button>
-        `;
-    }
-
-    if (step === 1) {
-        resetPuzzleState();
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Clue 1</h2>
-            <p>
-                Lets start off strong for your lovely day of birth.<br>
-                Decipher this code to unlock the first destination:<br><br>
-                20-8-5 13-21-19-5
-            </p>
-            <input id="answer" placeholder="Enter your answer">
-            <br>
-            <button onclick="checkAnswer('the muse')">Submit</button>
-            <br><br>
-            <button id="hintButton" onclick='showHint([
-                "Try converting numbers into letters 👀",
-                "1 = A, 2 = B, 3 = C...",
-                "You are looking for your coffee start"
-            ])' style="display:none;">Hint 💡</button>
-            <p id="hintBox" class="subtle"></p>
-        `;
-    }
-
-    if (step === 2) {
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Quick question 1</h2>
-            <p>What kind of ending sounds best right now?</p>
-            <div class="choice-stack">
-                <img src="low1.jpg" alt="Low Adventure" onclick="answer('low')">
-                <img src="mid1.jpg" alt="Mid Adventure" onclick="answer('mid')">
-                <img src="high1.jpg" alt="High Adventure" onclick="answer('high')">
-            </div>
-        `;
-    }
-
-    if (step === 3) {
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>📍 Destination 1 unlocked</h2>
-            <p>Go here to continue:</p>
-            <button onclick="openMap(48.00156901609624, -122.22195784235124)">Open in Maps</button>
-            <br><br>
-            <button onclick="nextStep(4)">I'm Here</button>
-        `;
-    }
-
-    if (step === 4) {
-        resetPuzzleState();
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Arrival Check ✅</h2>
-            <p>Find the physical code at this location to unlock the next clue.</p>
-            <img src="arrival1.jpg" alt="Hint location" class="hint-photo">
-            <p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
-            <input id="answer" placeholder="Enter location code">
-            <br>
-            <button onclick="checkAnswer('bean')">Submit</button>
-        `;
-    }
-
-    if (step === 5) {
-        resetPuzzleState();
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Clue 2</h2>
-            <p>
-                This puzzel will test your seattle history knowledge.<br><br>
-                My life span ran from 1906 to 1956<br><br>
-                Back in my day I was what some would call gassy<br><br>
-                I was the life of the party and brought seattle its energy<br><br>
-                What am I?
-            </p>
-            <input id="answer" placeholder="Enter your answer">
-            <br>
-            <button onclick="checkAnswer('gas works park')">Submit</button>
-            <br><br>
-            <button id="hintButton" onclick='showHint([
-                "Think industrial",
-                "Old structures that used to power something",
-                "It has an amazing view of Seattle skyline",
-                "Gas Works Park"
-            ])' style="display:none;">Hint 💡</button>
-            <p id="hintBox" class="subtle"></p>
-        `;
-    }
-
-    if (step === 6) {
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Quick question 2</h2>
-            <p>Whats more your speed? (Choose wisely).</p>
-            <div class="choice-stack">
-                <img src="low2.jpg" alt="Low Adventure" onclick="answer('low')">
-                <img src="mid2.jpg" alt="Mid Adventure" onclick="answer('mid')">
-                <img src="high2.jpg" alt="High Adventure" onclick="answer('high')">
-            </div>
-        `;
-    }
-
-    if (step === 7) {
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>📍 Destination 2 unlocked</h2>
-            <p>Go here to continue:</p>
-            <button onclick="openMap(47.64578871366846, -122.3343695349487)">Open in Maps</button>
-            <br><br>
-            <button onclick="nextStep(8)">I'm Here</button>
-        `;
-    }
-
-    if (step === 8) {
-        resetPuzzleState();
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Arrival Check ✅</h2>
-            <p>Find the physical code at this location to unlock the next clue.</p>
-            <img src="arrival2.jpg" alt="Hint location" class="hint-photo">
-            <p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
-            <input id="answer" placeholder="Enter location code">
-            <br>
-            <button onclick="checkAnswer('Gas')">Submit</button>
-        `;
-    }
-
-    if (step === 9) {
-        resetPuzzleState();
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Clue 3</h2>
-            <p>
-                Some stories don’t reveal themselves at first…<br>
-                Try shifting your perspective.
-            </p>
-            <p style="font-size:22px; letter-spacing:3px;">HOOLRWW</p>
-            <input id="answer" placeholder="Enter your answer">
-            <br>
-            <button onclick="checkAnswer('elliott')">Submit</button>
-            <br><br>
-            <button id="hintButton" onclick='showHint([
-                "Each letter has been shifted 👀",
-                "Try moving letters backward",
-                "Shift by 3",
-                "It spells the name of the place"
-            ])' style="display:none;">Hint 💡</button>
-            <p id="hintBox" class="subtle"></p>
-        `;
-    }
-
-    if (step === 10) {
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Quick question 3</h2>
-            <p>Choose the energy that feels right for the end of the night.</p>
-            <div class="choice-stack">
-                <img src="low3.jpg" alt="Low Adventure" onclick="answer('low')">
-                <img src="mid3.jpg" alt="Mid Adventure" onclick="answer('mid')">
-                <img src="high3.jpg" alt="High Adventure" onclick="answer('high')">
-            </div>
-        `;
-    }
-
-    if (step === 11) {
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>📍 Destination 3 unlocked</h2>
-            <p>Go here to continue:</p>
-            <button onclick="openMap(47.614720439007364, -122.31960224729806)">Open in Maps</button>
-            <br><br>
-            <button onclick="nextStep(12)">I'm Here</button>
-        `;
-    }
-
-    if (step === 12) {
-        resetPuzzleState();
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Final Puzzle 📖</h2>
-            <p>
-                Look around you.<br>
-                The answer is not in the app.
-            </p>
-            <p class="subtle">Between fiction and feeling… something waits.</p>
-            <img src="arrival3.jpg" alt="Hint location" class="hint-photo">
-            <p class="subtle">Find the hidden code to unlock the final destination.</p>
-            <input id="answer" placeholder="Enter final code">
-            <br>
-            <button onclick="checkAnswer('Smut')">Submit</button>
-        `;
-    }
-
-    if (step === 13) {
-        resetPuzzleState();
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Clue 4</h2>
-            <p>
-                Each choice you made led to your final destination.<br>
-                The vibe of the night has been chosen by you.....<br><br>
-                Now let us reveal where we end the day.
-            </p>
-            <button onclick="nextStep(14)">Continue</button>
-        `;
-    }
-
-    if (step === 14) {
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>WAIT!!!<br>One last question</h2>
-            <p>What Alaina speaks the most to you?.</p>
-            <div class="choice-stack">
-                <img src="low4.jpg" alt="Low Adventure" onclick="answer('low')">
-                <img src="mid4.jpg" alt="Mid Adventure" onclick="answer('mid')">
-                <img src="high4.jpg" alt="High Adventure" onclick="answer('high')">
-            </div>
-        `;
-    }
-
-    if (step === 15) {
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Calculating your perfect ending…</h2>
-            <img src="final-calc.jpg" alt="Calculating" class="transition-photo">
-        `;
-        setTimeout(() => {
-            step = 16;
-            updateBoardProgress();
-            render();
-        }, 8000);
-    }
-
-    if (step === 16) {
-        const choice = getFinalChoice();
-        let place = "";
-        let message = "";
-        let coords = { lat: 0, lng: 0 };
-
-        if (choice === "low") {
-            place = "Your Low Adventure Dinner Spot";
-            message = "Tonight calls for something cozy, comforting, and easy";
-            coords = { lat: 47.99909021716266, lng: -122.21543217638319 };
-        } else if (choice === "mid") {
-            place = "Your Mid Adventure Dinner Spot";
-            message = "A little adventure, a little comfort, and the perfect balance";
-            coords = { lat: 47.62142628458087, lng: -122.33340200385238 };
-        } else {
-            place = "Your High Adventure Dinner Spot";
-            message = "You chose adventure, so let’s make tonight unforgettable";
-            coords = { lat: 47.62431328377069, lng: -122.29505178642042 };
-        }
-
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h2>Final Destination ❤️</h2>
-            <p>${message}</p>
-            <p><strong>${place}</strong></p>
-            <button onclick="openMap(${coords.lat}, ${coords.lng})">Take me there</button>
-            <br><br>
-            <button onclick="nextStep(17)">Continue</button>
-        `;
-    }
-
-    if (step === 17) {
-        app.innerHTML = `
-            ${getBackButton()}
-            ${getBoardButton()}
-            <h1>❤️Congradulations, You did it❤️</h1>
-            <p>I hope you had an awsome 25th b-day hunt.</p>
-            <p>I love you.</p>
-        `;
-    }
+if (!isUnlocked) {
+app.innerHTML = `
+<h1>🔒 Birthday Adventure</h1>
+<p>Your experience is waiting for the game master to begin.</p>
+<p>Enter the game master code to unlock it.</p>
+<input id="masterCode" type="password" placeholder="Game master code">
+<br>
+<button onclick="unlockGame()">Unlock</button>
+<p class="subtle">All bubble-blowing babies will be beaten senseless by every able-bodied patron in the bar</p>
+`;
+return;
 }
 
+if (step === -1) {
+app.innerHTML = `
+<h2>${transitionMessage}</h2>
+<img src="${transitionImage}" alt="Transition image" class="transition-photo">
+<p class="subtle">Get ready for the next part...</p>
+`;
+return;
+}
+
+if (step === 99) {
+updateBoardProgress();
+
+let playerTop = 640;
+if (boardProgress === 1) playerTop = 500;
+if (boardProgress === 2) playerTop = 350;
+if (boardProgress === 3) playerTop = 200;
+if (boardProgress === 4) playerTop = 70;
+
+app.innerHTML = `
+<h2 class="board-title">Adventure Board</h2>
+<p class="subtle">Your journey so far</p>
+<div class="board-wrap">
+
+<div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:560px; height:100px;"></div>
+<div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:410px; height:100px;"></div>
+<div class="path-segment ${boardProgress >= 3 ? 'path-visible' : 'path-hidden'}" style="top:260px; height:100px;"></div>
+<div class="path-segment ${boardProgress >= 4 ? 'path-visible' : 'path-hidden'}" style="top:110px; height:100px;"></div>
+
+<div class="board-stop" style="top:620px;">
+<img src="${museRevealed ? 'muse-board.png' : 'mystery.jpg'}"
+class="stop-icon ${museRevealed ? '' : 'stop-locked'}"
+alt="The Muse">
+<div class="stop-label">${museRevealed ? 'The Muse' : '???'}</div>
+</div>
+
+<div class="board-stop" style="top:470px;">
+<img src="${gasRevealed ? 'gasworks-board.png' : 'mystery.jpg'}"
+class="stop-icon ${gasRevealed ? '' : 'stop-locked'}"
+alt="Gas Works Park">
+<div class="stop-label">${gasRevealed ? 'Gas Works' : '???'}</div>
+</div>
+
+<div class="board-stop" style="top:320px;">
+<img src="${elliottRevealed ? 'elliott-board.jpg' : 'mystery.jpg'}"
+class="stop-icon ${elliottRevealed ? '' : 'stop-locked'}"
+alt="Elliott Bay">
+<div class="stop-label">${elliottRevealed ? 'Elliott Bay' : '???'}</div>
+</div>
+
+<div class="board-stop" style="top:170px;">
+<img src="${dinnerRevealed ? 'dinner-board.jpg' : 'mystery.jpg'}"
+class="stop-icon ${dinnerRevealed ? '' : 'stop-locked'}"
+alt="Final Dinner">
+<div class="stop-label">${dinnerRevealed ? 'Final Dinner' : '???'}</div>
+</div>
+
+<img src="player.JPG" class="player-piece" alt="Player" style="top:${playerTop}px;">
+</div>
+<p class="board-note">Hidden stops will reveal only after you unlock them.</p>
+<button onclick="closeBoard()">Back to Game</button>
+`;
+return;
+}
+
+if (step === 0) {
+app.innerHTML = `
+<h1>Happy Birthday 🍖</h1>
+<p>Welcome to your B-day Hunt.</p>
+<p>I will be your game master for today.</p>
+<img src="intro.jpg" alt="Cover Photo" class="photo-cover">
+<p class="subtle">Your mission: solve the clues, answer the mystery questions, and follow the trail.</p>
+<button onclick="nextStep(1)">Start</button>
+`;
+}
+
+if (step === 1) {
+resetPuzzleState();
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Clue 1</h2>
+<p>
+Lets start off strong for your lovely day of birth.<br>
+Decipher this code to unlock the first destination:<br><br>
+20-8-5 13-21-19-5
+</p>
+<input id="answer" placeholder="Enter your answer">
+<br>
+<button onclick="checkAnswer('the muse')">Submit</button>
+<br><br>
+<button id="hintButton" onclick='showHint([
+"Try converting numbers into letters 👀",
+"1 = A, 2 = B, 3 = C...",
+"You are looking for your coffee start"
+])' style="display:none;">Hint 💡</button>
+<p id="hintBox" class="subtle"></p>
+`;
+}
+
+if (step === 2) {
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Quick question 1</h2>
+<p>What kind of ending sounds best right now?</p>
+<div class="choice-stack">
+<img src="low1.jpg" alt="Low Adventure" onclick="answer('low')">
+<img src="mid1.jpg" alt="Mid Adventure" onclick="answer('mid')">
+<img src="high1.jpg" alt="High Adventure" onclick="answer('high')">
+</div>
+`;
+}
+
+if (step === 3) {
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>📍 Destination 1 unlocked</h2>
+<p>Go here to continue:</p>
+<button onclick="openMap(48.00156901609624, -122.22195784235124)">Open in Maps</button>
+<br><br>
+<button onclick="nextStep(4)">I'm Here</button>
+`;
+}
+
+if (step === 4) {
+resetPuzzleState();
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Arrival Check ✅</h2>
+<p>Find the physical code at this location to unlock the next clue.</p>
+<img src="arrival1.jpg" alt="Hint location" class="hint-photo">
+<p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
+<input id="answer" placeholder="Enter location code">
+<br>
+<button onclick="checkAnswer('bean')">Submit</button>
+`;
+}
+
+if (step === 5) {
+resetPuzzleState();
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Clue 2</h2>
+<p>
+This puzzel will test your seattle history knowledge.<br><br>
+My life span ran from 1906 to 1956<br><br>
+Back in my day I was what some would call gassy<br><br>
+I was the life of the party and brought seattle its energy<br><br>
+What am I?
+</p>
+<input id="answer" placeholder="Enter your answer">
+<br>
+<button onclick="checkAnswer('gas works park')">Submit</button>
+<br><br>
+<button id="hintButton" onclick='showHint([
+"Think industrial",
+"Old structures that used to power something",
+"It has an amazing view of Seattle skyline",
+"Gas Works Park"
+])' style="display:none;">Hint 💡</button>
+<p id="hintBox" class="subtle"></p>
+`;
+}
+
+if (step === 6) {
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Quick question 2</h2>
+<p>Whats more your speed? (Choose wisely).</p>
+<div class="choice-stack">
+<img src="low2.jpg" alt="Low Adventure" onclick="answer('low')">
+<img src="mid2.jpg" alt="Mid Adventure" onclick="answer('mid')">
+<img src="high2.jpg" alt="High Adventure" onclick="answer('high')">
+</div>
+`;
+}
+
+if (step === 7) {
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>📍 Destination 2 unlocked</h2>
+<p>Go here to continue:</p>
+<button onclick="openMap(47.64578871366846, -122.3343695349487)">Open in Maps</button>
+<br><br>
+<button onclick="nextStep(8)">I'm Here</button>
+`;
+}
+
+if (step === 8) {
+resetPuzzleState();
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Arrival Check ✅</h2>
+<p>Find the physical code at this location to unlock the next clue.</p>
+<img src="arrival2.jpg" alt="Hint location" class="hint-photo">
+<p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
+<input id="answer" placeholder="Enter location code">
+<br>
+<button onclick="checkAnswer('Gas')">Submit</button>
+`;
+}
+
+if (step === 9) {
+resetPuzzleState();
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Clue 3</h2>
+<p>
+Some stories don’t reveal themselves at first…<br>
+Try shifting your perspective.
+</p>
+<p style="font-size:22px; letter-spacing:3px;">HOOLRWW</p>
+<input id="answer" placeholder="Enter your answer">
+<br>
+<button onclick="checkAnswer('elliott')">Submit</button>
+<br><br>
+<button id="hintButton" onclick='showHint([
+"Each letter has been shifted 👀",
+"Try moving letters backward",
+"Shift by 3",
+"It spells the name of the place"
+])' style="display:none;">Hint 💡</button>
+<p id="hintBox" class="subtle"></p>
+`;
+}
+
+if (step === 10) {
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Quick question 3</h2>
+<p>Choose the energy that feels right for the end of the night.</p>
+<div class="choice-stack">
+<img src="low3.jpg" alt="Low Adventure" onclick="answer('low')">
+<img src="mid3.jpg" alt="Mid Adventure" onclick="answer('mid')">
+<img src="high3.jpg" alt="High Adventure" onclick="answer('high')">
+</div>
+`;
+}
+
+if (step === 11) {
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>📍 Destination 3 unlocked</h2>
+<p>Go here to continue:</p>
+<button onclick="openMap(47.614720439007364, -122.31960224729806)">Open in Maps</button>
+<br><br>
+<button onclick="nextStep(12)">I'm Here</button>
+`;
+}
+
+if (step === 12) {
+resetPuzzleState();
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Final Puzzle 📖</h2>
+<p>
+Look around you.<br>
+The answer is not in the app.
+</p>
+<p class="subtle">Between fiction and feeling… something waits.</p>
+<img src="arrival3.jpg" alt="Hint location" class="hint-photo">
+<p class="subtle">Find the hidden code to unlock the final destination.</p>
+<input id="answer" placeholder="Enter final code">
+<br>
+<button onclick="checkAnswer('Smut')">Submit</button>
+`;
+}
+
+if (step === 13) {
+resetPuzzleState();
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Clue 4</h2>
+<p>
+Each choice you made led to your final destination.<br>
+The vibe of the night has been chosen by you.....<br><br>
+Now let us reveal where we end the day.
+</p>
+<button onclick="nextStep(14)">Continue</button>
+`;
+}
+
+if (step === 14) {
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>WAIT!!!<br>One last question</h2>
+<p>What Alaina speaks the most to you?.</p>
+<div class="choice-stack">
+<img src="low4.jpg" alt="Low Adventure" onclick="answer('low')">
+<img src="mid4.jpg" alt="Mid Adventure" onclick="answer('mid')">
+<img src="high4.jpg" alt="High Adventure" onclick="answer('high')">
+</div>
+`;
+}
+
+if (step === 15) {
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Calculating your perfect ending…</h2>
+<img src="final-calc.jpg" alt="Calculating" class="transition-photo">
+`;
+setTimeout(() => {
+step = 16;
+dinnerRevealed = true;
+updateBoardProgress();
+render();
+}, 8000);
+}
+
+if (step === 16) {
+const choice = getFinalChoice();
+let place = "";
+let message = "";
+let coords = { lat: 0, lng: 0 };
+if (choice === "low") {
+place = "Your Low Adventure Dinner Spot";
+message = "Tonight calls for something cozy, comforting, and easy";
+coords = { lat: 47.99909021716266, lng: -122.21543217638319 };
+} else if (choice === "mid") {
+place = "Your Mid Adventure Dinner Spot";
+message = "A little adventure, a little comfort, and the perfect balance";
+coords = { lat: 47.62142628458087, lng: -122.33340200385238 };
+} else {
+place = "Your High Adventure Dinner Spot";
+message = "You chose adventure, so let’s make tonight unforgettable";
+coords = { lat: 47.62431328377069, lng: -122.29505178642042 };
+}
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h2>Final Destination ❤️</h2>
+<p>${message}</p>
+<p><strong>${place}</strong></p>
+<button onclick="openMap(${coords.lat}, ${coords.lng})">Take me there</button>
+<br><br>
+<button onclick="nextStep(17)">Continue</button>
+`;
+}
+
+if (step === 17) {
+app.innerHTML = `
+${getBackButton()}
+${getBoardButton()}
+<h1>❤️Congradulations, You did it❤️</h1>
+<p>I hope you had an awsome 25th b-day hunt.</p>
+<p>I love you.</p>
+`;
+}
+}
 render();
 </script>
-
 </body>
 </html>
