@@ -108,7 +108,7 @@ input {
     box-shadow: 0 4px 10px rgba(0,0,0,0.12);
 }
 .path-hidden {
-    opacity: 0.15;
+    opacity: 0;
 }
 .path-visible {
     opacity: 1;
@@ -186,10 +186,10 @@ let returnStep = 0;
 const gameMasterCode = "hambday";
 
 function updateBoardProgress() {
-    if (step >= 4) boardProgress = Math.max(boardProgress, 1);
-    if (step >= 8) boardProgress = Math.max(boardProgress, 2);
-    if (step >= 12) boardProgress = Math.max(boardProgress, 3);
-    if (step >= 16) boardProgress = Math.max(boardProgress, 4);
+    if (step >= 5) boardProgress = Math.max(boardProgress, 1);   // The Muse revealed only after Muse code
+    if (step >= 9) boardProgress = Math.max(boardProgress, 2);   // Gas Works revealed only after Gas code
+    if (step >= 13) boardProgress = Math.max(boardProgress, 3);  // Elliott Bay revealed only after Elliott code
+    if (step >= 16) boardProgress = Math.max(boardProgress, 4);  // Final dinner revealed
 }
 
 function nextStep(s) {
@@ -365,55 +365,62 @@ function render() {
     }
 
     if (step === 99) {
-        updateBoardProgress();
+    updateBoardProgress();
 
-        let playerTop = 640;
-        if (boardProgress === 1) playerTop = 500;
-        if (boardProgress === 2) playerTop = 350;
-        if (boardProgress === 3) playerTop = 200;
-        if (boardProgress === 4) playerTop = 70;
+    let playerTop = 640;
+    if (boardProgress === 1) playerTop = 500;
+    if (boardProgress === 2) playerTop = 350;
+    if (boardProgress === 3) playerTop = 200;
+    if (boardProgress === 4) playerTop = 70;
 
-        app.innerHTML = `
-            <h2 class="board-title">Adventure Board</h2>
-            <p class="subtle">Your journey so far</p>
+    app.innerHTML = `
+        <h2 class="board-title">Adventure Board</h2>
+        <p class="subtle">Your journey so far</p>
 
-            <div class="board-wrap">
+        <div class="board-wrap">
 
-                <div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:560px; height:100px;"></div>
-                <div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:410px; height:100px;"></div>
-                <div class="path-segment ${boardProgress >= 3 ? 'path-visible' : 'path-hidden'}" style="top:260px; height:100px;"></div>
-                <div class="path-segment ${boardProgress >= 4 ? 'path-visible' : 'path-hidden'}" style="top:110px; height:100px;"></div>
+            <div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:560px; height:100px;"></div>
+            <div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:410px; height:100px;"></div>
+            <div class="path-segment ${boardProgress >= 3 ? 'path-visible' : 'path-hidden'}" style="top:260px; height:100px;"></div>
+            <div class="path-segment ${boardProgress >= 4 ? 'path-visible' : 'path-hidden'}" style="top:110px; height:100px;"></div>
 
-                <div class="board-stop" style="top:620px;">
-                    <img src="muse-board.png" class="stop-icon ${boardProgress >= 1 ? '' : 'stop-locked'}" alt="The Muse">
-                    <div class="stop-label">The Muse</div>
-                </div>
-
-                <div class="board-stop" style="top:470px;">
-                    <img src="gasworks-board.png" class="stop-icon ${boardProgress >= 2 ? '' : 'stop-locked'}" alt="Gas Works Park">
-                    <div class="stop-label">Gas Works</div>
-                </div>
-
-                <div class="board-stop" style="top:320px;">
-                    <img src="elliott-board.JPG" class="stop-icon ${boardProgress >= 3 ? '' : 'stop-locked'}" alt="Elliott Bay">
-                    <div class="stop-label">Elliott Bay</div>
-                </div>
-
-                <div class="board-stop" style="top:170px;">
-                    <img src="dinner-board.png" class="stop-icon ${boardProgress >= 4 ? '' : 'stop-locked'}" alt="Final Dinner">
-                    <div class="stop-label">Final Dinner</div>
-                </div>
-
-                <img src="player-piece.png" class="player-piece" alt="Player" style="top:${playerTop}px;">
-
+            <div class="board-stop" style="top:620px;">
+                <img src="${boardProgress >= 1 ? 'muse-board.png' : 'mystery-pin.png'}"
+                     class="stop-icon ${boardProgress >= 1 ? '' : 'stop-locked'}"
+                     alt="The Muse">
+                <div class="stop-label">${boardProgress >= 1 ? 'The Muse' : '???'}</div>
             </div>
 
-            <p class="board-note">More of the path will reveal as you unlock each stop.</p>
-            <button onclick="closeBoard()">Back to Game</button>
-        `;
-        return;
-    }
+            <div class="board-stop" style="top:470px;">
+                <img src="${boardProgress >= 2 ? 'gasworks-board.png' : 'mystery-pin.png'}"
+                     class="stop-icon ${boardProgress >= 2 ? '' : 'stop-locked'}"
+                     alt="Gas Works Park">
+                <div class="stop-label">${boardProgress >= 2 ? 'Gas Works' : '???'}</div>
+            </div>
 
+            <div class="board-stop" style="top:320px;">
+                <img src="${boardProgress >= 3 ? 'elliott-board.JPG' : 'mystery-pin.png'}"
+                     class="stop-icon ${boardProgress >= 3 ? '' : 'stop-locked'}"
+                     alt="Elliott Bay">
+                <div class="stop-label">${boardProgress >= 3 ? 'Elliott Bay' : '???'}</div>
+            </div>
+
+            <div class="board-stop" style="top:170px;">
+                <img src="${boardProgress >= 4 ? 'dinner-board.JPG' : 'mystery-pin.png'}"
+                     class="stop-icon ${boardProgress >= 4 ? '' : 'stop-locked'}"
+                     alt="Final Dinner">
+                <div class="stop-label">${boardProgress >= 4 ? 'Final Dinner' : '???'}</div>
+            </div>
+
+            <img src="player.JPG" class="player-piece" alt="Player" style="top:${playerTop}px;">
+
+        </div>
+
+        <p class="board-note">Hidden stops will reveal only after you unlock them.</p>
+        <button onclick="closeBoard()">Back to Game</button>
+    `;
+    return;
+}
     if (step === 0) {
         app.innerHTML = `
             <h1>🍖Happy Birthday🍖</h1>
