@@ -84,6 +84,80 @@ input {
     font-size: 14px;
     padding: 10px 14px;
 }
+.board-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+    height: 760px;
+    margin: 10px auto 0;
+    background: linear-gradient(180deg, #fff8ef, #ffe5ec);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 3px rgba(255,255,255,0.7);
+}
+.board-title {
+    margin-bottom: 8px;
+}
+.path-segment {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    border-radius: 999px;
+    background: #ffd166;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+.path-hidden {
+    opacity: 0.15;
+}
+.path-visible {
+    opacity: 1;
+}
+.board-stop {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 88px;
+    text-align: center;
+}
+.stop-icon {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.16);
+    border: 3px solid white;
+}
+.stop-label {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #444;
+    font-weight: 600;
+}
+.stop-locked {
+    opacity: 0.35;
+    filter: grayscale(1);
+}
+.player-piece {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid white;
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    transition: top 0.6s ease;
+    z-index: 5;
+}
+.board-note {
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+}
 </style>
 </head>
 <body>
@@ -106,10 +180,21 @@ let pendingStep = null;
 let transitionMessage = "";
 let transitionImage = "";
 
+let boardProgress = 0;
+let returnStep = 0;
+
 const gameMasterCode = "hambday";
+
+function updateBoardProgress() {
+    if (step >= 4) boardProgress = Math.max(boardProgress, 1);
+    if (step >= 8) boardProgress = Math.max(boardProgress, 2);
+    if (step >= 12) boardProgress = Math.max(boardProgress, 3);
+    if (step >= 16) boardProgress = Math.max(boardProgress, 4);
+}
 
 function nextStep(s) {
     step = s;
+    updateBoardProgress();
     render();
 }
 
@@ -130,7 +215,7 @@ function unlockGame() {
     }
 }
 
-function showCorrectScreen(next, message = "Correct ❤️", image = "correct1.jpg") {
+function showCorrectScreen(next, message = "Correct ❤️", image = "correct.jpg") {
     pendingStep = next;
     transitionMessage = message;
     transitionImage = image;
@@ -140,6 +225,7 @@ function showCorrectScreen(next, message = "Correct ❤️", image = "correct1.j
     setTimeout(() => {
         step = pendingStep;
         pendingStep = null;
+        updateBoardProgress();
         render();
     }, 3000);
 }
@@ -150,15 +236,15 @@ function checkAnswer(correct) {
 
     if (input === correct.toLowerCase()) {
         if (step === 1) {
-            showCorrectScreen(2, "Correct", "correct1.jpg");
+            showCorrectScreen(2, "Correct ☕", "correct1.jpg");
         } else if (step === 4) {
-            showCorrectScreen(5, "Nice work", "correct2.jpg");
+            showCorrectScreen(5, "Nice work 🔓", "correct2.jpg");
         } else if (step === 5) {
-            showCorrectScreen(6, "Correct", "correct3.jpg");
+            showCorrectScreen(6, "Correct ⚙️", "correct3.jpg");
         } else if (step === 8) {
-            showCorrectScreen(9, "You found it", "correct4.jpg");
+            showCorrectScreen(9, "You found it 👀", "correct4.jpg");
         } else if (step === 9) {
-            showCorrectScreen(10, "Decoded perfectly", "correct5.jpg");
+            showCorrectScreen(10, "Decoded perfectly 📖", "correct5.jpg");
         } else if (step === 12) {
             showCorrectScreen(13, "Final destination unlocked ❤️", "correct6.jpg");
         } else {
@@ -190,8 +276,25 @@ function goBack() {
 }
 
 function getBackButton() {
-    if (step === 0 || step === -1) return "";
+    if (step === 0 || step === -1 || step === 99) return "";
     return `<button class="back-btn" onclick="goBack()">← Back</button>`;
+}
+
+function viewBoard() {
+    returnStep = step;
+    updateBoardProgress();
+    step = 99;
+    render();
+}
+
+function closeBoard() {
+    step = returnStep;
+    render();
+}
+
+function getBoardButton() {
+    if (step === 99 || step === -1 || !isUnlocked) return "";
+    return `<button class="back-btn" onclick="viewBoard()">🗺️ View Board</button>`;
 }
 
 function answer(choice) {
@@ -203,9 +306,9 @@ function answer(choice) {
     }
 
     if (step === 2) {
-        showCorrectScreen(3, "Interesting... noted 😏", "choice1.jpg");
+        showCorrectScreen(3, "This choice has consequences...", "choice1.jpg");
     } else if (step === 6) {
-        showCorrectScreen(7, "This choice has consequences...", "choice2.jpg");
+        showCorrectScreen(7, "Interesting... noted 😏", "choice2.jpg");
     } else if (step === 10) {
         showCorrectScreen(11, "The night is taking shape...", "choice3.jpg");
     } else if (step === 14) {
@@ -261,6 +364,56 @@ function render() {
         return;
     }
 
+    if (step === 99) {
+        updateBoardProgress();
+
+        let playerTop = 640;
+        if (boardProgress === 1) playerTop = 500;
+        if (boardProgress === 2) playerTop = 350;
+        if (boardProgress === 3) playerTop = 200;
+        if (boardProgress === 4) playerTop = 70;
+
+        app.innerHTML = `
+            <h2 class="board-title">Adventure Board</h2>
+            <p class="subtle">Your journey so far</p>
+
+            <div class="board-wrap">
+
+                <div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:560px; height:100px;"></div>
+                <div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:410px; height:100px;"></div>
+                <div class="path-segment ${boardProgress >= 3 ? 'path-visible' : 'path-hidden'}" style="top:260px; height:100px;"></div>
+                <div class="path-segment ${boardProgress >= 4 ? 'path-visible' : 'path-hidden'}" style="top:110px; height:100px;"></div>
+
+                <div class="board-stop" style="top:620px;">
+                    <img src="muse-board.png" class="stop-icon ${boardProgress >= 1 ? '' : 'stop-locked'}" alt="The Muse">
+                    <div class="stop-label">The Muse</div>
+                </div>
+
+                <div class="board-stop" style="top:470px;">
+                    <img src="gasworks-board.png" class="stop-icon ${boardProgress >= 2 ? '' : 'stop-locked'}" alt="Gas Works Park">
+                    <div class="stop-label">Gas Works</div>
+                </div>
+
+                <div class="board-stop" style="top:320px;">
+                    <img src="elliott-board.png" class="stop-icon ${boardProgress >= 3 ? '' : 'stop-locked'}" alt="Elliott Bay">
+                    <div class="stop-label">Elliott Bay</div>
+                </div>
+
+                <div class="board-stop" style="top:170px;">
+                    <img src="dinner-board.png" class="stop-icon ${boardProgress >= 4 ? '' : 'stop-locked'}" alt="Final Dinner">
+                    <div class="stop-label">Final Dinner</div>
+                </div>
+
+                <img src="player-piece.png" class="player-piece" alt="Player" style="top:${playerTop}px;">
+
+            </div>
+
+            <p class="board-note">More of the path will reveal as you unlock each stop.</p>
+            <button onclick="closeBoard()">Back to Game</button>
+        `;
+        return;
+    }
+
     if (step === 0) {
         app.innerHTML = `
             <h1>🍖Happy Birthday🍖</h1>
@@ -276,6 +429,7 @@ function render() {
         resetPuzzleState();
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Clue 1</h2>
             <p>
                 Lets start off strong for your lovely day of birth.<br>
@@ -298,6 +452,7 @@ function render() {
     if (step === 2) {
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Quick question 1</h2>
             <p>What kind of ending sounds best right now?</p>
             <div class="choice-stack">
@@ -311,6 +466,7 @@ function render() {
     if (step === 3) {
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>📍 Destination 1 unlocked</h2>
             <p>Go here to continue:</p>
             <button onclick="openMap(48.00156901609624, -122.22195784235124)">Open in Maps</button>
@@ -323,6 +479,7 @@ function render() {
         resetPuzzleState();
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Arrival Check ✅</h2>
             <p>Find the physical code at this location to unlock the next clue.</p>
             <img src="arrival1.jpg" alt="Hint location" class="hint-photo">
@@ -337,6 +494,7 @@ function render() {
         resetPuzzleState();
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Clue 2</h2>
             <p>
                 This puzzel will test your seattle history knowledge.<br>
@@ -362,6 +520,7 @@ function render() {
     if (step === 6) {
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Quick question 2</h2>
             <p>Whats more your speed? (Choose wisely).</p>
             <div class="choice-stack">
@@ -375,6 +534,7 @@ function render() {
     if (step === 7) {
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>📍 Destination 2 unlocked</h2>
             <p>Go here to continue:</p>
             <button onclick="openMap(47.64578871366846, -122.3343695349487)">Open in Maps</button>
@@ -387,6 +547,7 @@ function render() {
         resetPuzzleState();
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Arrival Check ✅</h2>
             <p>Find the physical code at this location to unlock the next clue.</p>
             <img src="arrival2.jpg" alt="Hint location" class="hint-photo">
@@ -401,6 +562,7 @@ function render() {
         resetPuzzleState();
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Clue 3</h2>
             <p>
                 Some stories don’t reveal themselves at first…<br>
@@ -424,6 +586,7 @@ function render() {
     if (step === 10) {
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Quick question 3</h2>
             <p>Choose the energy that feels right for the end of the night.</p>
             <div class="choice-stack">
@@ -437,6 +600,7 @@ function render() {
     if (step === 11) {
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>📍 Destination 3 unlocked</h2>
             <p>Go here to continue:</p>
             <button onclick="openMap(47.614720439007364, -122.31960224729806)">Open in Maps</button>
@@ -449,6 +613,7 @@ function render() {
         resetPuzzleState();
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Final Puzzle 📖</h2>
             <p>
                 Look around you.<br>
@@ -467,6 +632,7 @@ function render() {
         resetPuzzleState();
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Clue 4</h2>
             <p>
                 Each choice you made led to your final destination.<br>
@@ -481,6 +647,7 @@ function render() {
     if (step === 14) {
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Quick question 4</h2>
             <p>Last one. Pick what sounds most exciting.</p>
             <div class="choice-stack">
@@ -494,11 +661,13 @@ function render() {
     if (step === 15) {
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Calculating your perfect ending…</h2>
             <img src="final-calc.jpg" alt="Calculating" class="transition-photo">
         `;
         setTimeout(() => {
             step = 16;
+            updateBoardProgress();
             render();
         }, 3000);
     }
@@ -525,6 +694,7 @@ function render() {
 
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h2>Final Destination ❤️</h2>
             <p>${message}</p>
             <p><strong>${place}</strong></p>
@@ -537,6 +707,7 @@ function render() {
     if (step === 17) {
         app.innerHTML = `
             ${getBackButton()}
+            ${getBoardButton()}
             <h1>❤️Congradulations, You did it❤️</h1>
             <p>I hope you had an awsome 25th b-day hunt.</p>
             <p>I love you.</p>
