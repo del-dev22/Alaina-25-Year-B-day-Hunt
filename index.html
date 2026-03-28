@@ -175,13 +175,13 @@ input {
 
 .path-diagonal {
   position: absolute;
-  height: 14px;
+  height: 12px;
   border-radius: 999px;
   background: linear-gradient(90deg, #ffd166, #ffb703);
   box-shadow: 0 4px 10px rgba(0,0,0,0.12);
   transform-origin: left center;
 }
-
+  
 .board-stop {
   position: absolute;
   left: 50%;
@@ -227,8 +227,7 @@ input {
 
 .player-piece {
   position: absolute;
-  left: calc(50% + 82px);
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   width: 58px;
   height: 58px;
   object-fit: cover;
@@ -237,7 +236,7 @@ input {
   background: #fff;
   box-shadow: 0 8px 18px rgba(0,0,0,0.18);
   transition: top 0.6s ease, left 0.6s ease;
-  z-index: 5;
+  z-index: 6;
 }
 
 .board-note {
@@ -526,86 +525,98 @@ function render() {
     return;
   }
 
-  if (step === 99) {
-    updateBoardProgress();
+ if (step === 99) {
+  updateBoardProgress();
 
-    let playerTop = 815;
-    let playerLeft = "calc(50% + 82px)";
+  let playerTop = 775;
+  let playerLeft = "50%";
 
-    if (boardProgress === 1) playerTop = 685;
-    if (boardProgress === 2) playerTop = 535;
-    if (boardProgress === 3 && detourTaken) {
-      playerTop = 385;
-      playerLeft = "calc(50% - 38px)";
-    }
-    if (boardProgress === 4) playerTop = 235;
-    if (boardProgress === 5) playerTop = 85;
-
-    let dinnerBoardImage = "mystery.jpg";
-    if (dinnerRevealed && finalDinnerChoice === "low") dinnerBoardImage = "dinner-low.jpg";
-    if (dinnerRevealed && finalDinnerChoice === "mid") dinnerBoardImage = "dinner-mid.jpg";
-    if (dinnerRevealed && finalDinnerChoice === "high") dinnerBoardImage = "dinner-high.jpg";
-
-    const detourMarkup = detourOffered ? `
-      <div class="path-diagonal ${boardProgress >= 3 && detourTaken ? 'path-visible' : 'path-hidden'}"
-        style="left:100px; top:500px; width:108px; transform: rotate(-50deg);"></div>
-
-      <div class="path-diagonal ${boardProgress >= 4 && detourTaken ? 'path-visible' : 'path-hidden'}"
-        style="left:100px; top:458px; width:110px; transform: rotate(50deg);"></div>
-
-      <div class="board-stop ${detourTaken ? 'stop-current' : ''}" style="top:460px; left:132px; transform:none;">
-        <img src="${fremontRevealed ? 'detour.jpg' : 'mystery.jpg'}" class="stop-icon ${fremontRevealed ? '' : 'stop-locked'}">
-        <div class="stop-label">${fremontRevealed ? 'Detour Stop' : '???'}</div>
-      </div>
-    ` : "";
-
-    app.innerHTML = `
-      <h2 class="board-title">Adventure Board</h2>
-      <p class="subtle">Your journey so far</p>
-
-      <div class="board-wrap">
-        <div class="sparkle s1">✨</div>
-        <div class="sparkle s2">⭐</div>
-        <div class="sparkle s3">✨</div>
-        <div class="sparkle s4">⭐</div>
-
-        <div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:730px; height:90px;"></div>
-        <div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:580px; height:90px;"></div>
-
-        <div class="path-segment ${boardProgress >= 4 && !detourTaken ? 'path-visible' : 'path-hidden'}" style="top:430px; height:240px;"></div>
-
-        <div class="path-segment ${boardProgress >= 5 ? 'path-visible' : 'path-hidden'}" style="top:130px; height:90px;"></div>
-
-        <div class="board-stop ${boardProgress === 1 ? 'stop-current' : ''}" style="top:760px;">
-          <img src="${museRevealed ? 'muse-board.png' : 'mystery.jpg'}" class="stop-icon ${museRevealed ? '' : 'stop-locked'}">
-          <div class="stop-label">${museRevealed ? 'The Muse' : '???'}</div>
-        </div>
-
-        <div class="board-stop ${boardProgress === 2 ? 'stop-current' : ''}" style="top:610px;">
-          <img src="${gasRevealed ? 'gasworks-board.png' : 'mystery.jpg'}" class="stop-icon ${gasRevealed ? '' : 'stop-locked'}">
-          <div class="stop-label">${gasRevealed ? 'Gas Works' : '???'}</div>
-        </div>
-
-        ${detourMarkup}
-
-        <div class="board-stop ${boardProgress === 4 ? 'stop-current' : ''}" style="top:310px;">
-          <img src="${elliottRevealed ? 'elliott-board.jpg' : 'mystery.jpg'}" class="stop-icon ${elliottRevealed ? '' : 'stop-locked'}">
-          <div class="stop-label">${elliottRevealed ? 'Elliott Bay' : '???'}</div>
-        </div>
-
-        <div class="board-stop ${boardProgress === 5 ? 'stop-current' : ''}" style="top:160px;">
-          <img src="${dinnerRevealed ? dinnerBoardImage : 'mystery.jpg'}" class="stop-icon ${dinnerRevealed ? '' : 'stop-locked'}">
-          <div class="stop-label">${dinnerRevealed ? 'Your Dinner' : '???'}</div>
-        </div>
-
-        <img src="player.jpg" class="player-piece" style="top:${playerTop}px; left:${playerLeft};">
-      </div>
-
-      <p class="board-note">Hidden stops reveal only after you unlock them.</p>
-      <button onclick="closeBoard()">Back to Game</button>
-    `;
-    return;
+  if (boardProgress === 1) {
+    playerTop = 775;
+    playerLeft = "50%";
   }
+  if (boardProgress === 2) {
+    playerTop = 625;
+    playerLeft = "50%";
+  }
+  if (boardProgress === 3 && detourTaken) {
+    playerTop = 495;
+    playerLeft = "132px";
+  }
+  if (boardProgress === 4) {
+    playerTop = 345;
+    playerLeft = "50%";
+  }
+  if (boardProgress === 5) {
+    playerTop = 185;
+    playerLeft = "50%";
+  }
+
+  let dinnerBoardImage = "mystery.jpg";
+  if (dinnerRevealed && finalDinnerChoice === "low") dinnerBoardImage = "dinner-low.jpg";
+  if (dinnerRevealed && finalDinnerChoice === "mid") dinnerBoardImage = "dinner-mid.jpg";
+  if (dinnerRevealed && finalDinnerChoice === "high") dinnerBoardImage = "dinner-high.jpg";
+
+  const detourMarkup = detourOffered ? `
+    <div class="path-diagonal ${boardProgress >= 3 && detourTaken ? 'path-visible' : 'path-hidden'}"
+      style="left:165px; top:650px; width:88px; transform: rotate(-43deg);"></div>
+
+    <div class="path-diagonal ${boardProgress >= 4 && detourTaken ? 'path-visible' : 'path-hidden'}"
+      style="left:164px; top:518px; width:92px; transform: rotate(43deg);"></div>
+
+    <div class="board-stop ${boardProgress === 3 && detourTaken ? 'stop-current' : ''}" style="top:470px; left:132px; transform:none;">
+      <img src="${fremontRevealed ? 'brewery-board.jpg' : 'mystery.jpg'}" class="stop-icon ${fremontRevealed ? '' : 'stop-locked'}">
+      <div class="stop-label">${fremontRevealed ? 'Detour Stop' : '???'}</div>
+    </div>
+  ` : "";
+
+  app.innerHTML = `
+    <h2 class="board-title">Adventure Board</h2>
+    <p class="subtle">Your journey so far</p>
+
+    <div class="board-wrap">
+      <div class="sparkle s1">✨</div>
+      <div class="sparkle s2">⭐</div>
+      <div class="sparkle s3">✨</div>
+      <div class="sparkle s4">⭐</div>
+
+      <div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:730px; height:50px;"></div>
+      <div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:580px; height:50px;"></div>
+
+      <div class="path-segment ${boardProgress >= 4 && !detourTaken ? 'path-visible' : 'path-hidden'}" style="top:430px; height:110px;"></div>
+
+      <div class="path-segment ${boardProgress >= 5 ? 'path-visible' : 'path-hidden'}" style="top:280px; height:50px;"></div>
+
+      <div class="board-stop ${boardProgress === 1 ? 'stop-current' : ''}" style="top:760px;">
+        <img src="${museRevealed ? 'muse-board.png' : 'mystery.jpg'}" class="stop-icon ${museRevealed ? '' : 'stop-locked'}">
+        <div class="stop-label">${museRevealed ? 'The Muse' : '???'}</div>
+      </div>
+
+      <div class="board-stop ${boardProgress === 2 ? 'stop-current' : ''}" style="top:610px;">
+        <img src="${gasRevealed ? 'gasworks-board.png' : 'mystery.jpg'}" class="stop-icon ${gasRevealed ? '' : 'stop-locked'}">
+        <div class="stop-label">${gasRevealed ? 'Gas Works' : '???'}</div>
+      </div>
+
+      ${detourMarkup}
+
+      <div class="board-stop ${boardProgress === 4 ? 'stop-current' : ''}" style="top:320px;">
+        <img src="${elliottRevealed ? 'elliott-board.jpg' : 'mystery.jpg'}" class="stop-icon ${elliottRevealed ? '' : 'stop-locked'}">
+        <div class="stop-label">${elliottRevealed ? 'Elliott Bay' : '???'}</div>
+      </div>
+
+      <div class="board-stop ${boardProgress === 5 ? 'stop-current' : ''}" style="top:160px;">
+        <img src="${dinnerRevealed ? dinnerBoardImage : 'mystery.jpg'}" class="stop-icon ${dinnerRevealed ? '' : 'stop-locked'}">
+        <div class="stop-label">${dinnerRevealed ? 'Your Dinner' : '???'}</div>
+      </div>
+
+      <img src="player.jpg" class="player-piece" style="top:${playerTop}px; left:${playerLeft};">
+    </div>
+
+    <p class="board-note">Hidden stops reveal only after you unlock them.</p>
+    <button onclick="closeBoard()">Back to Game</button>
+  `;
+  return;
+}
 
   if (step === 0) {
     app.innerHTML = `
