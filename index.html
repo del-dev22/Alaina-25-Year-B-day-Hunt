@@ -224,7 +224,12 @@ input {
   50% { transform: scale(1.035); }
   100% { transform: scale(1); }
 }
-
+.branch-line-hidden {
+  stroke: #ffbf3f;
+  stroke-width: 12;
+  stroke-linecap: round;
+  opacity: 0;
+}
 .player-piece {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -395,7 +400,7 @@ function checkAnswer(correct) {
     } else if (step === 8) {
       showCorrectScreen(9, "You found it 👀", "correct4.jpg");
     } else if (step === 9) {
-      showCorrectScreen(10, "Great Digging skills!!! You are almost there", "correct5.jpg");
+      showCorrectScreen(10, "Great digging skills!!! You are almost there", "correct5.jpg");
     } else if (step === 14) {
       showCorrectScreen(15, "Yeah you are 😏", "correct6.jpg");
     } else {
@@ -525,31 +530,40 @@ function render() {
     return;
   }
 
- if (step === 99) {
+if (step === 99) {
   updateBoardProgress();
 
-  let playerTop = 775;
-  let playerLeft = "50%";
+  const boardCenterX = 195;
+  const stopCenterOffsetY = 43;
+
+  const muse = { x: 195, y: 760 + stopCenterOffsetY };
+  const gas = { x: 195, y: 610 + stopCenterOffsetY };
+  const detour = { x: 130, y: 500 + stopCenterOffsetY };
+  const elliott = { x: 195, y: 345 + stopCenterOffsetY };
+  const dinner = { x: 195, y: 185 + stopCenterOffsetY };
+
+  let playerX = muse.x;
+  let playerY = 760 + stopCenterOffsetY;
 
   if (boardProgress === 1) {
-    playerTop = 775;
-    playerLeft = "50%";
+    playerX = muse.x;
+    playerY = muse.y;
   }
   if (boardProgress === 2) {
-    playerTop = 625;
-    playerLeft = "50%";
+    playerX = gas.x;
+    playerY = gas.y;
   }
   if (boardProgress === 3 && detourTaken) {
-    playerTop = 495;
-    playerLeft = "132px";
+    playerX = detour.x;
+    playerY = detour.y;
   }
   if (boardProgress === 4) {
-    playerTop = 345;
-    playerLeft = "50%";
+    playerX = elliott.x;
+    playerY = elliott.y;
   }
   if (boardProgress === 5) {
-    playerTop = 185;
-    playerLeft = "50%";
+    playerX = dinner.x;
+    playerY = dinner.y;
   }
 
   let dinnerBoardImage = "mystery.jpg";
@@ -557,18 +571,34 @@ function render() {
   if (dinnerRevealed && finalDinnerChoice === "mid") dinnerBoardImage = "dinner-mid.jpg";
   if (dinnerRevealed && finalDinnerChoice === "high") dinnerBoardImage = "dinner-high.jpg";
 
- const detourMarkup = detourOffered ? `
-  <div class="path-diagonal ${boardProgress >= 3 && detourTaken ? 'path-visible' : 'path-hidden'}"
-    style="left:165px; top:654px; width:84px; transform: rotate(-118deg);"></div>
+  const straightPath = `
+    <div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:730px; height:50px;"></div>
+    <div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:580px; height:50px;"></div>
+    <div class="path-segment ${boardProgress >= 4 && !detourTaken ? 'path-visible' : 'path-hidden'}" style="top:430px; height:80px;"></div>
+    <div class="path-segment ${boardProgress >= 5 ? 'path-visible' : 'path-hidden'}" style="top:280px; height:50px;"></div>
+  `;
 
-  <div class="path-diagonal ${boardProgress >= 4 && detourTaken ? 'path-visible' : 'path-hidden'}"
-    style="left:162px; top:568px; width:92px; transform: rotate(-62deg);"></div>
+  const detourSvg = detourOffered ? `
+    <svg class="branch-svg" viewBox="0 0 390 920" preserveAspectRatio="none">
+      <line
+        x1="${gas.x}" y1="${gas.y}"
+        x2="${detour.x}" y2="${detour.y}"
+        class="${detourTaken && boardProgress >= 3 ? 'branch-line-visible' : 'branch-line-hidden'}"
+      />
+      <line
+        x1="${detour.x}" y1="${detour.y}"
+        x2="${elliott.x}" y2="${elliott.y}"
+        class="${detourTaken && boardProgress >= 4 ? 'branch-line-visible' : 'branch-line-hidden'}"
+      />
+    </svg>
+  ` : "";
 
-  <div class="board-stop ${boardProgress === 3 && detourTaken ? 'stop-current' : ''}" style="top:485px; left:122px; transform:none;">
-    <img src="${fremontRevealed ? 'brewery-board.jpg' : 'mystery.jpg'}" class="stop-icon ${fremontRevealed ? '' : 'stop-locked'}">
-    <div class="stop-label">${fremontRevealed ? 'Detour Stop' : '???'}</div>
-  </div>
-` : "";
+  const detourStop = detourOffered ? `
+    <div class="board-stop ${boardProgress === 3 && detourTaken ? 'stop-current' : ''}" style="top:500px; left:${detour.x}px; transform:translateX(-50%);">
+      <img src="${fremontRevealed ? 'detour.jpg' : 'mystery.jpg'}" class="stop-icon ${fremontRevealed ? '' : 'stop-locked'}">
+      <div class="stop-label">${fremontRevealed ? 'Detour Stop' : '???'}</div>
+    </div>
+  ` : "";
 
   app.innerHTML = `
     <h2 class="board-title">Adventure Board</h2>
@@ -580,36 +610,32 @@ function render() {
       <div class="sparkle s3">✨</div>
       <div class="sparkle s4">⭐</div>
 
-      <div class="path-segment ${boardProgress >= 1 ? 'path-visible' : 'path-hidden'}" style="top:730px; height:50px;"></div>
-      <div class="path-segment ${boardProgress >= 2 ? 'path-visible' : 'path-hidden'}" style="top:580px; height:50px;"></div>
+      ${straightPath}
+      ${detourSvg}
 
-      <div class="path-segment ${boardProgress >= 4 && !detourTaken ? 'path-visible' : 'path-hidden'}" style="top:430px; height:110px;"></div>
-
-      <div class="path-segment ${boardProgress >= 5 ? 'path-visible' : 'path-hidden'}" style="top:280px; height:50px;"></div>
-
-      <div class="board-stop ${boardProgress === 1 ? 'stop-current' : ''}" style="top:760px;">
+      <div class="board-stop ${boardProgress === 1 ? 'stop-current' : ''}" style="top:760px; left:50%; transform:translateX(-50%);">
         <img src="${museRevealed ? 'muse-board.png' : 'mystery.jpg'}" class="stop-icon ${museRevealed ? '' : 'stop-locked'}">
         <div class="stop-label">${museRevealed ? 'The Muse' : '???'}</div>
       </div>
 
-      <div class="board-stop ${boardProgress === 2 ? 'stop-current' : ''}" style="top:610px;">
+      <div class="board-stop ${boardProgress === 2 ? 'stop-current' : ''}" style="top:610px; left:50%; transform:translateX(-50%);">
         <img src="${gasRevealed ? 'gasworks-board.png' : 'mystery.jpg'}" class="stop-icon ${gasRevealed ? '' : 'stop-locked'}">
         <div class="stop-label">${gasRevealed ? 'Gas Works' : '???'}</div>
       </div>
 
-      ${detourMarkup}
+      ${detourStop}
 
-      <div class="board-stop ${boardProgress === 4 ? 'stop-current' : ''}" style="top:320px;">
+      <div class="board-stop ${boardProgress === 4 ? 'stop-current' : ''}" style="top:345px; left:50%; transform:translateX(-50%);">
         <img src="${elliottRevealed ? 'elliott-board.jpg' : 'mystery.jpg'}" class="stop-icon ${elliottRevealed ? '' : 'stop-locked'}">
         <div class="stop-label">${elliottRevealed ? 'Elliott Bay' : '???'}</div>
       </div>
 
-      <div class="board-stop ${boardProgress === 5 ? 'stop-current' : ''}" style="top:160px;">
+      <div class="board-stop ${boardProgress === 5 ? 'stop-current' : ''}" style="top:185px; left:50%; transform:translateX(-50%);">
         <img src="${dinnerRevealed ? dinnerBoardImage : 'mystery.jpg'}" class="stop-icon ${dinnerRevealed ? '' : 'stop-locked'}">
         <div class="stop-label">${dinnerRevealed ? 'Your Dinner' : '???'}</div>
       </div>
 
-      <img src="player.jpg" class="player-piece" style="top:${playerTop}px; left:${playerLeft};">
+      <img src="player.jpg" class="player-piece" style="left:${playerX}px; top:${playerY}px;">
     </div>
 
     <p class="board-note">Hidden stops reveal only after you unlock them.</p>
@@ -617,7 +643,6 @@ function render() {
   `;
   return;
 }
-
   if (step === 0) {
     app.innerHTML = `
       <h1>Happy Birthday 🍖</h1>
