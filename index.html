@@ -205,6 +205,21 @@ function resetPuzzleState() {
 hintLevel = 0;
 attempts = 0;
 }
+    
+function showArrivalHint(hintPhoto) {
+  const photo = document.getElementById("arrivalHintPhoto");
+  const button = document.getElementById("hintBtn");
+
+  if (photo) {
+    photo.src = hintPhoto;
+    photo.alt = "Hint location photo";
+  }
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Hint Shown";
+  }
+}
 
 function unlockGame() {
 const input = document.getElementById("masterCode").value.trim();
