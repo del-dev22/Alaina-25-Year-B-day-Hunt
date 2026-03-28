@@ -558,8 +558,8 @@ function render() {
   if (dinnerRevealed && finalDinnerChoice === "high") dinnerBoardImage = "dinner-high.jpg";
 
   const detourMarkup = detourOffered ? `
-    <div class="path-diagonal ${boardProgress >= 3 && detourTaken ? 'path-visible' : 'path-hidden'}"
-      style="left:165px; top:650px; width:88px; transform: rotate(-43deg);"></div>
+  <div class="path-diagonal ${boardProgress >= 3 && detourTaken ? 'path-visible' : 'path-hidden'}"
+  style="left:168px; top:646px; width:78px; transform: rotate(-42deg);"></div>
 
     <div class="path-diagonal ${boardProgress >= 4 && detourTaken ? 'path-visible' : 'path-hidden'}"
       style="left:164px; top:518px; width:92px; transform: rotate(43deg);"></div>
@@ -828,7 +828,7 @@ function render() {
       <h2>Detour Stop Unlocked 🍺</h2>
       <p>A fun little stop before the next destination.</p>
       <p>Enjoy the detour, then continue when you are ready.</p>
-      <button onclick="openMap(47.651622, -122.350540)">Open in Maps</button>
+      <button onclick="openMap(47.65175005883401, -122.32931437411406)">Open in Maps</button>
       <br><br>
       <button onclick="nextStep(13)">Continue the journey</button>
     `;
