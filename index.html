@@ -514,20 +514,28 @@ ${getBoardButton()}
 }
 
 if (step === 4) {
-resetPuzzleState();
-app.innerHTML = `
-${getBackButton()}
-${getBoardButton()}
-<h2>Arrival Check ✅</h2>
-<p>Find the physical code at this location to unlock the next clue.</p>
-<img src="arrival1.jpg" alt="Hint location" class="hint-photo">
-<p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
-<input id="answer" placeholder="Enter location code">
-<br>
-<button onclick="checkAnswer('coffee beans')">Submit</button>
-`;
-}
+  resetPuzzleState();
+  app.innerHTML = `
+    ${getBackButton()}
+    ${getBoardButton()}
+    <h2>Arrival Check ✅</h2>
+    <p>Find the physical code at this location to unlock the next clue.</p>
 
+    <img id="arrivalHintPhoto" src="arrival1.jpg" alt="Hint location" class="hint-photo">
+
+    <p class="subtle">Look closely… the code is hidden somewhere here 👀</p>
+
+    <button id="hintBtn" onclick="showArrivalHint('arrival11.jpg')">
+      Need a Hint?
+    </button>
+
+    <br><br>
+
+    <input id="answer" placeholder="Enter location code">
+    <br>
+    <button onclick="checkAnswer('coffee beans')">Submit</button>
+  `;
+}
 if (step === 5) {
 resetPuzzleState();
 app.innerHTML = `
