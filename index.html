@@ -548,13 +548,13 @@ function render() {
 
     const detourMarkup = detourOffered ? `
       <div class="path-diagonal ${boardProgress >= 3 && detourTaken ? 'path-visible' : 'path-hidden'}"
-        style="left:124px; top:610px; width:108px; transform: rotate(-50deg);"></div>
+        style="left:100px; top:500px; width:108px; transform: rotate(-50deg);"></div>
 
       <div class="path-diagonal ${boardProgress >= 4 && detourTaken ? 'path-visible' : 'path-hidden'}"
-        style="left:124px; top:458px; width:110px; transform: rotate(50deg);"></div>
+        style="left:100px; top:458px; width:110px; transform: rotate(50deg);"></div>
 
       <div class="board-stop ${detourTaken ? 'stop-current' : ''}" style="top:460px; left:132px; transform:none;">
-        <img src="${fremontRevealed ? 'brewery-board.jpg' : 'mystery.jpg'}" class="stop-icon ${fremontRevealed ? '' : 'stop-locked'}">
+        <img src="${fremontRevealed ? 'detour.jpg' : 'mystery.jpg'}" class="stop-icon ${fremontRevealed ? '' : 'stop-locked'}">
         <div class="stop-label">${fremontRevealed ? 'Detour Stop' : '???'}</div>
       </div>
     ` : "";
